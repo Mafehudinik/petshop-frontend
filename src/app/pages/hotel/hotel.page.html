@@ -1,0 +1,455 @@
+<div class="hotel-layout">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <svg width="32" height="28" viewBox="0 0 130 110" fill="none">
+        <ellipse cx="42" cy="72" rx="22" ry="18" fill="none" stroke="rgba(255,255,255,0.9)" stroke-width="3"/>
+        <circle cx="42" cy="48" r="14" fill="none" stroke="rgba(255,255,255,0.9)" stroke-width="3"/>
+        <path d="M30 40 Q24 28 28 22 Q36 30 36 40" fill="none" stroke="rgba(255,255,255,0.9)" stroke-width="3" stroke-linejoin="round"/>
+        <path d="M64 66 Q76 56 74 46" fill="none" stroke="rgba(255,255,255,0.9)" stroke-width="2.5" stroke-linecap="round"/>
+        <ellipse cx="88" cy="74" rx="20" ry="16" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="2.5"/>
+        <circle cx="88" cy="52" r="12" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="2.5"/>
+        <path d="M78 44 L74 30 L84 40" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="2.5" stroke-linejoin="round"/>
+        <path d="M96 42 L100 28 L92 40" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="2.5" stroke-linejoin="round"/>
+        <path d="M65 58 C65 58 58 50 58 45 C58 41 62 38 65 42 C68 38 72 41 72 45 C72 50 65 58 65 58Z" fill="#e53935"/>
+      </svg>
+      <div class="sidebar-brand">
+        <span class="brand-name">RABICHOS</span>
+        <span class="brand-sub">Banho &amp; Tosa</span>
+      </div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <a class="nav-item" routerLink="/dashboard" routerDirection="root" routerLinkActive="active">
+        <ion-icon name="grid-outline"></ion-icon><span>Dashboard</span>
+      </a>
+      <a class="nav-item" routerLink="/clients" routerDirection="root" routerLinkActive="active">
+        <ion-icon name="people-outline"></ion-icon><span>Clientes</span>
+      </a>
+      <a class="nav-item" routerLink="/pets" routerDirection="root" routerLinkActive="active">
+        <ion-icon name="paw-outline"></ion-icon><span>Pets</span>
+      </a>
+      <a class="nav-item" routerLink="/appointments" routerDirection="root" routerLinkActive="active">
+        <ion-icon name="calendar-outline"></ion-icon><span>Agenda</span>
+      </a>
+      <a class="nav-item" routerLink="/hotel" routerDirection="root" routerLinkActive="active">
+        <ion-icon name="home-outline"></ion-icon><span>Hotel</span>
+      </a>
+      <a class="nav-item" routerLink="/sales" routerDirection="root" routerLinkActive="active">
+        <ion-icon name="cash-outline"></ion-icon><span>Vendas (PDV)</span>
+      </a>
+      <a class="nav-item" routerLink="/products" routerDirection="root" routerLinkActive="active">
+        <ion-icon name="cube-outline"></ion-icon><span>Estoque</span>
+      </a>
+      <a class="nav-item" routerLink="/services" routerDirection="root" routerLinkActive="active">
+        <ion-icon name="cut-outline"></ion-icon><span>Serviços</span>
+      </a>
+      <a class="nav-item" routerLink="/reports" routerDirection="root" routerLinkActive="active">
+        <ion-icon name="bar-chart-outline"></ion-icon><span>Relatórios</span>
+      </a>
+      <a class="nav-item" routerLink="/whatsapp" routerDirection="root" routerLinkActive="active">
+        <ion-icon name="logo-whatsapp"></ion-icon><span>WhatsApp</span>
+      </a>
+    </nav>
+
+    <div class="sidebar-user">
+      <div class="user-avatar">{{ userInitials }}</div>
+      <div class="user-info">
+        <span class="user-name">{{ currentUser?.name || 'Admin' }}</span>
+        <span class="user-role">{{ currentUser?.role || 'Administrador' }}</span>
+      </div>
+    </div>
+  </aside>
+
+  <!-- CONTEÚDO -->
+  <div class="main-content">
+
+    <!-- Topbar -->
+    <div class="topbar">
+      <div class="topbar-left">
+        <div class="page-title">Hotel para Pets</div>
+        <div class="page-subtitle">Controle de hospedagens ativas e histórico</div>
+      </div>
+      <button class="btn-primary" (click)="openModal()">
+        <ion-icon name="add-outline"></ion-icon>
+        Novo check-in
+      </button>
+    </div>
+
+    <!-- KPIs -->
+    <div class="kpi-bar">
+      <div class="kpi-card">
+        <div class="kpi-label">Hospedados agora</div>
+        <div class="kpi-value">{{ stats.active }}</div>
+        <div class="kpi-sub ok">{{ stats.available }} vagas disponíveis</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Check-out hoje</div>
+        <div class="kpi-value warn">{{ stats.checkoutToday }}</div>
+        <div class="kpi-sub warn">{{ checkoutTodayNames }}</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Check-in hoje</div>
+        <div class="kpi-value info">{{ stats.checkinToday }}</div>
+        <div class="kpi-sub info">Confirmado</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Receita do mês</div>
+        <div class="kpi-value">{{ stats.monthRevenue | currency:'BRL':'symbol':'1.2-2' }}</div>
+        <div class="kpi-sub ok">+8% vs mês anterior</div>
+      </div>
+    </div>
+
+    <!-- Filtros -->
+    <div class="filter-bar">
+      <div class="search-box">
+        <ion-icon name="search-outline"></ion-icon>
+        <input type="text" placeholder="Buscar pet ou tutor..."
+               [(ngModel)]="searchTerm" (input)="filterStays()" />
+      </div>
+      <div class="status-filters">
+        <button class="filter-btn"
+                *ngFor="let f of filterOptions"
+                [class.active]="selectedFilter === f.value"
+                (click)="setFilter(f.value)">
+          {{ f.label }}
+        </button>
+      </div>
+    </div>
+
+    <!-- Lista de hospedagens -->
+    <div class="list-area">
+
+      <div class="loading-state" *ngIf="loading">
+        <ion-spinner name="crescent"></ion-spinner>
+        <p>Carregando hospedagens...</p>
+      </div>
+
+      <!-- ── Empty State Redesenhado ── -->
+      <div class="empty-state" *ngIf="!loading && filteredStays.length === 0">
+
+        <!-- Busca sem resultado -->
+        <ng-container *ngIf="searchTerm">
+          <div class="empty-icon-wrap search-empty">
+            <ion-icon name="search-outline"></ion-icon>
+          </div>
+          <h3>Nenhum resultado encontrado</h3>
+          <p>Não encontramos hospedagens para <strong>"{{ searchTerm }}"</strong>.<br>Tente outro termo de busca.</p>
+        </ng-container>
+
+        <!-- Sem hospedagens -->
+        <ng-container *ngIf="!searchTerm">
+          <div class="empty-illustration">
+            <div class="empty-bubble b1"></div>
+            <div class="empty-bubble b2"></div>
+            <div class="empty-bubble b3"></div>
+            <div class="empty-circle">
+              <svg width="64" height="64" viewBox="0 0 24 24" fill="none"
+                   stroke="#2e7d4f" stroke-width="1.2" stroke-linecap="round">
+                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                <polyline points="9 22 9 12 15 12 15 22"/>
+              </svg>
+            </div>
+            <div class="empty-add-dot">
+              <ion-icon name="add-outline"></ion-icon>
+            </div>
+          </div>
+
+          <h3>Nenhuma hospedagem ativa</h3>
+          <p>Os pets hospedados aparecerão aqui.<br>Registre o primeiro check-in!</p>
+
+          <button class="btn-empty-action" (click)="openModal()">
+            <ion-icon name="home-outline"></ion-icon>
+            Registrar check-in
+          </button>
+
+          <div class="empty-hint">
+            <ion-icon name="information-circle-outline"></ion-icon>
+            <span>Capacidade atual: {{ stats.capacity }} vagas disponíveis</span>
+          </div>
+        </ng-container>
+
+      </div>
+
+      <!-- Cards de hospedagem -->
+      <div class="stay-card" *ngFor="let stay of filteredStays" [ngClass]="stay.urgency">
+
+        <div class="pet-avatar" [ngStyle]="{'background': getAvatarBg(stay), 'color': getAvatarColor(stay)}">
+          <svg *ngIf="stay.pet_species !== 'gato'" width="22" height="22" viewBox="0 0 24 24" fill="none"
+               [attr.stroke]="getAvatarColor(stay)" stroke-width="1.8" stroke-linecap="round">
+            <circle cx="11" cy="12" r="4"/><circle cx="6" cy="8" r="2"/>
+            <circle cx="16" cy="8" r="2"/><circle cx="4" cy="14" r="2"/><circle cx="18" cy="14" r="2"/>
+          </svg>
+          <svg *ngIf="stay.pet_species === 'gato'" width="22" height="22" viewBox="0 0 24 24" fill="none"
+               [attr.stroke]="getAvatarColor(stay)" stroke-width="1.8" stroke-linecap="round">
+            <circle cx="12" cy="12" r="4"/>
+            <path d="M8 8 Q6 4 8 2"/><path d="M16 8 Q18 4 16 2"/>
+            <path d="M8 16 Q6 20 8 22"/><path d="M16 16 Q18 20 16 22"/>
+          </svg>
+        </div>
+
+        <div class="stay-info">
+          <div class="stay-header">
+            <span class="pet-name">{{ stay.pet_name }}</span>
+            <span class="status-badge" [ngClass]="stay.urgency">{{ urgencyLabel(stay.urgency) }}</span>
+          </div>
+
+          <div class="stay-meta">
+            <div class="meta-item">
+              <span class="meta-label">Tutor</span>
+              <span class="meta-value">{{ stay.client_name }}</span>
+            </div>
+            <div class="meta-item">
+              <span class="meta-label">Check-in</span>
+              <span class="meta-value">{{ stay.checkin_date | date:'dd/MM/yyyy' }}</span>
+            </div>
+            <div class="meta-item">
+              <span class="meta-label">Check-out</span>
+              <span class="meta-value" [class.urgent]="stay.urgency === 'urgent'">
+                {{ stay.checkout_date | date:'dd/MM/yyyy' }}
+              </span>
+            </div>
+            <div class="meta-item">
+              <span class="meta-label">Diárias</span>
+              <span class="meta-value">{{ stay.total_days }} dias</span>
+            </div>
+          </div>
+
+          <div class="stay-tags">
+            <div class="tag food" *ngIf="stay.food_info">
+              <ion-icon name="restaurant-outline"></ion-icon>
+              {{ stay.food_info }}
+            </div>
+            <div class="tag meds" [ngClass]="stay.urgency" *ngIf="stay.medication">
+              <ion-icon name="medical-outline"></ion-icon>
+              {{ stay.medication }}
+            </div>
+            <div class="tag no-meds" *ngIf="!stay.medication">
+              <ion-icon name="checkmark-circle-outline"></ion-icon>
+              Sem medicação
+            </div>
+          </div>
+        </div>
+
+        <div class="stay-actions">
+          <div class="stay-total">{{ stay.total_value | currency:'BRL':'symbol':'1.2-2' }}</div>
+          <div class="days-remaining" [ngClass]="stay.urgency">
+            {{ daysRemainingLabel(stay) }}
+          </div>
+          <button class="action-btn" [ngClass]="stay.urgency" (click)="confirmCheckout(stay)"
+                  *ngIf="stay.urgency === 'urgent' || stay.urgency === 'soon'">
+            Registrar saída
+          </button>
+          <button class="detail-btn" (click)="viewStay(stay)" *ngIf="stay.urgency === 'ok'">
+            Ver detalhes
+          </button>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Legenda -->
+    <div class="legend-bar">
+      <span class="legend-title">Status:</span>
+      <div class="legend-item" *ngFor="let l of statusLegend">
+        <div class="legend-dot" [ngStyle]="{'background': l.bg, 'border': '1px solid ' + l.border}"></div>
+        <span>{{ l.label }}</span>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- MODAL — NOVO CHECK-IN -->
+<div class="modal-overlay" *ngIf="showModal" (click)="closeModal()">
+  <div class="modal-box" (click)="$event.stopPropagation()">
+
+    <div class="modal-header">
+      <div class="modal-header-left">
+        <div class="modal-icon">
+          <ion-icon name="home-outline"></ion-icon>
+        </div>
+        <div>
+          <div class="modal-title">Novo check-in</div>
+          <div class="modal-subtitle">Registre a entrada do pet no hotel</div>
+        </div>
+      </div>
+      <button class="modal-close" (click)="closeModal()">
+        <ion-icon name="close-outline"></ion-icon>
+      </button>
+    </div>
+
+    <div class="modal-body">
+
+      <div class="form-section-title">Pet</div>
+
+      <div class="form-group full">
+        <label>Pet <span class="required">*</span></label>
+        <div class="pet-selected" *ngIf="selectedPet">
+          <div class="pet-icon-sm"><ion-icon name="paw-outline"></ion-icon></div>
+          <div class="pet-info-sm">
+            <div class="pet-name-sm">{{ selectedPet.name }}</div>
+            <div class="pet-detail-sm">{{ selectedPet.breed }} · {{ selectedPet.client_name }}</div>
+          </div>
+          <ion-icon name="close-outline" class="remove-item" (click)="clearPet()"></ion-icon>
+        </div>
+        <div class="input-wrap" *ngIf="!selectedPet" [class.error]="formErrors.pet_id">
+          <ion-icon name="search-outline"></ion-icon>
+          <input type="text" placeholder="Buscar pet pelo nome..."
+                 [(ngModel)]="petSearch" (input)="searchPets()" />
+        </div>
+        <div class="search-dropdown" *ngIf="petResults.length > 0 && !selectedPet">
+          <div class="search-result" *ngFor="let p of petResults" (click)="selectPet(p)">
+            <div class="result-icon green"><ion-icon name="paw-outline"></ion-icon></div>
+            <div>
+              <div class="result-name">{{ p.name }}</div>
+              <div class="result-sub">{{ p.breed }} · {{ p.client_name }}</div>
+            </div>
+          </div>
+        </div>
+        <span class="field-error" *ngIf="formErrors.pet_id">{{ formErrors.pet_id }}</span>
+      </div>
+
+      <div class="form-section-title">Período</div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Check-in <span class="required">*</span></label>
+          <div class="input-wrap" [class.error]="formErrors.checkin_date">
+            <ion-icon name="calendar-outline"></ion-icon>
+            <input type="date" [(ngModel)]="form.checkin_date"
+                   (change)="calcTotal()" (blur)="validateField('checkin_date')" />
+          </div>
+          <span class="field-error" *ngIf="formErrors.checkin_date">{{ formErrors.checkin_date }}</span>
+        </div>
+        <div class="form-group">
+          <label>Check-out previsto <span class="required">*</span></label>
+          <div class="input-wrap" [class.error]="formErrors.checkout_date">
+            <ion-icon name="calendar-outline"></ion-icon>
+            <input type="date" [(ngModel)]="form.checkout_date"
+                   (change)="calcTotal()" (blur)="validateField('checkout_date')" />
+          </div>
+          <span class="field-error" *ngIf="formErrors.checkout_date">{{ formErrors.checkout_date }}</span>
+        </div>
+      </div>
+
+      <div class="stay-summary" *ngIf="totalDays > 0">
+        <div class="summary-left">
+          <ion-icon name="information-circle-outline"></ion-icon>
+          <span>{{ totalDays }} diária{{ totalDays > 1 ? 's' : '' }} · {{ form.daily_rate | currency:'BRL':'symbol':'1.2-2' }}/dia</span>
+        </div>
+        <span class="summary-total">{{ totalValue | currency:'BRL':'symbol':'1.2-2' }}</span>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Valor por diária (R$) <span class="required">*</span></label>
+          <div class="input-wrap" [class.error]="formErrors.daily_rate">
+            <span class="currency-prefix">R$</span>
+            <input type="number" step="0.01" min="0" placeholder="0,00"
+                   [(ngModel)]="form.daily_rate" (change)="calcTotal()"
+                   (blur)="validateField('daily_rate')" />
+          </div>
+          <span class="field-error" *ngIf="formErrors.daily_rate">{{ formErrors.daily_rate }}</span>
+        </div>
+        <div class="form-group">
+          <label>Alimentação</label>
+          <div class="input-wrap">
+            <ion-icon name="restaurant-outline"></ion-icon>
+            <input type="text" placeholder="Ex: Ração Premium 2x/dia"
+                   [(ngModel)]="form.food_info" />
+          </div>
+        </div>
+      </div>
+
+      <div class="form-section-title">
+        Saúde <span class="optional">(opcional)</span>
+      </div>
+
+      <div class="form-group full">
+        <label>Medicação</label>
+        <div class="input-wrap">
+          <ion-icon name="medical-outline"></ion-icon>
+          <input type="text" placeholder="Ex: Antibiótico manhã e noite..."
+                 [(ngModel)]="form.medication" />
+        </div>
+      </div>
+
+      <div class="form-group full">
+        <label>Observações</label>
+        <textarea placeholder="Cuidados especiais, comportamento, alergias..."
+                  [(ngModel)]="form.notes" rows="3"></textarea>
+      </div>
+
+    </div>
+
+    <div class="modal-footer">
+      <span class="required-note">* campos obrigatórios</span>
+      <div class="modal-actions">
+        <button class="btn-cancel" (click)="closeModal()">Cancelar</button>
+        <button class="btn-save" (click)="saveCheckin()" [disabled]="saving">
+          <ion-icon name="checkmark-outline"></ion-icon>
+          {{ saving ? 'Salvando...' : 'Confirmar check-in' }}
+        </button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- MODAL — CONFIRMAR CHECKOUT -->
+<div class="modal-overlay" *ngIf="showCheckoutModal" (click)="closeCheckoutModal()">
+  <div class="modal-box modal-box-sm" (click)="$event.stopPropagation()">
+
+    <div class="modal-header checkout-header">
+      <div class="modal-header-left">
+        <div class="modal-icon checkout-icon">
+          <ion-icon name="log-out-outline"></ion-icon>
+        </div>
+        <div>
+          <div class="modal-title">Registrar saída</div>
+          <div class="modal-subtitle">Confirme o check-out do pet</div>
+        </div>
+      </div>
+      <button class="modal-close" (click)="closeCheckoutModal()">
+        <ion-icon name="close-outline"></ion-icon>
+      </button>
+    </div>
+
+    <div class="modal-body" *ngIf="checkoutStay">
+      <div class="checkout-summary">
+        <div class="checkout-pet-row">
+          <div class="pet-icon-sm"><ion-icon name="paw-outline"></ion-icon></div>
+          <div class="pet-info-sm">
+            <div class="pet-name-sm">{{ checkoutStay.pet_name }}</div>
+            <div class="pet-detail-sm">{{ checkoutStay.client_name }}</div>
+          </div>
+        </div>
+        <div class="checkout-meta">
+          <div class="meta-item">
+            <span class="meta-label">Check-in</span>
+            <span class="meta-value">{{ checkoutStay.checkin_date | date:'dd/MM/yyyy' }}</span>
+          </div>
+          <div class="meta-item">
+            <span class="meta-label">Check-out</span>
+            <span class="meta-value">{{ checkoutStay.checkout_date | date:'dd/MM/yyyy' }}</span>
+          </div>
+          <div class="meta-item">
+            <span class="meta-label">Total</span>
+            <span class="meta-value total-value">{{ checkoutStay.total_value | currency:'BRL':'symbol':'1.2-2' }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn-cancel" (click)="closeCheckoutModal()">Cancelar</button>
+      <button class="btn-checkout" (click)="doCheckout()" [disabled]="saving">
+        <ion-icon name="log-out-outline"></ion-icon>
+        {{ saving ? 'Processando...' : 'Confirmar saída' }}
+      </button>
+    </div>
+
+  </div>
+</div>

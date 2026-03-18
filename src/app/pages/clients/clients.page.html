@@ -1,0 +1,354 @@
+<div class="clients-layout">
+
+  <!-- ═══════════════════════════════════════
+       SIDEBAR
+  ════════════════════════════════════════ -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <svg width="32" height="28" viewBox="0 0 130 110" fill="none">
+        <ellipse cx="42" cy="72" rx="22" ry="18" fill="none" stroke="rgba(255,255,255,0.9)" stroke-width="3"/>
+        <circle cx="42" cy="48" r="14" fill="none" stroke="rgba(255,255,255,0.9)" stroke-width="3"/>
+        <path d="M30 40 Q24 28 28 22 Q36 30 36 40" fill="none" stroke="rgba(255,255,255,0.9)" stroke-width="3" stroke-linejoin="round"/>
+        <path d="M64 66 Q76 56 74 46" fill="none" stroke="rgba(255,255,255,0.9)" stroke-width="2.5" stroke-linecap="round"/>
+        <ellipse cx="88" cy="74" rx="20" ry="16" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="2.5"/>
+        <circle cx="88" cy="52" r="12" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="2.5"/>
+        <path d="M78 44 L74 30 L84 40" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="2.5" stroke-linejoin="round"/>
+        <path d="M96 42 L100 28 L92 40" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="2.5" stroke-linejoin="round"/>
+        <path d="M65 58 C65 58 58 50 58 45 C58 41 62 38 65 42 C68 38 72 41 72 45 C72 50 65 58 65 58Z" fill="#e53935"/>
+      </svg>
+      <div class="sidebar-brand">
+        <span class="brand-name">RABICHOS</span>
+        <span class="brand-sub">Banho &amp; Tosa</span>
+      </div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <a class="nav-item" routerLink="/dashboard" routerDirection="root" routerLinkActive="active">
+        <ion-icon name="grid-outline"></ion-icon><span>Dashboard</span>
+      </a>
+      <a class="nav-item" routerLink="/clients" routerDirection="root" routerLinkActive="active">
+        <ion-icon name="people-outline"></ion-icon><span>Clientes</span>
+      </a>
+      <a class="nav-item" routerLink="/pets" routerDirection="root" routerLinkActive="active">
+        <ion-icon name="paw-outline"></ion-icon><span>Pets</span>
+      </a>
+      <a class="nav-item" routerLink="/appointments" routerDirection="root" routerLinkActive="active">
+        <ion-icon name="calendar-outline"></ion-icon><span>Agenda</span>
+      </a>
+      <a class="nav-item" routerLink="/hotel" routerDirection="root" routerLinkActive="active">
+        <ion-icon name="home-outline"></ion-icon><span>Hotel</span>
+      </a>
+      <a class="nav-item" routerLink="/sales" routerDirection="root" routerLinkActive="active">
+        <ion-icon name="cash-outline"></ion-icon><span>Vendas (PDV)</span>
+      </a>
+      <a class="nav-item" routerLink="/products" routerDirection="root" routerLinkActive="active">
+        <ion-icon name="cube-outline"></ion-icon><span>Estoque</span>
+      </a>
+      <a class="nav-item" routerLink="/services" routerDirection="root" routerLinkActive="active">
+        <ion-icon name="cut-outline"></ion-icon><span>Serviços</span>
+      </a>
+      <a class="nav-item" routerLink="/reports" routerDirection="root" routerLinkActive="active">
+        <ion-icon name="bar-chart-outline"></ion-icon><span>Relatórios</span>
+      </a>
+      <a class="nav-item" routerLink="/whatsapp" routerDirection="root" routerLinkActive="active">
+        <ion-icon name="logo-whatsapp"></ion-icon><span>WhatsApp</span>
+      </a>
+    </nav>
+
+    <div class="sidebar-user">
+      <div class="user-avatar">{{ userInitials }}</div>
+      <div class="user-info">
+        <span class="user-name">{{ currentUser?.name || 'Admin' }}</span>
+        <span class="user-role">{{ currentUser?.role || 'Administrador' }}</span>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ═══════════════════════════════════════
+       CONTEÚDO
+  ════════════════════════════════════════ -->
+  <div class="main-content">
+
+    <!-- Topbar -->
+    <div class="topbar">
+      <div class="topbar-left">
+        <div class="page-title">Gestão de clientes</div>
+        <div class="page-subtitle">Gerencie todos os clientes do pet shop</div>
+      </div>
+      <button class="btn-primary" (click)="openModal()">
+        <ion-icon name="add-outline"></ion-icon>
+        Novo cliente
+      </button>
+    </div>
+
+    <!-- Filtros -->
+    <div class="filter-bar">
+      <div class="search-box">
+        <ion-icon name="search-outline"></ion-icon>
+        <input
+          type="text"
+          placeholder="Buscar por nome, telefone ou email..."
+          [(ngModel)]="searchTerm"
+          (input)="filterClients()"
+        />
+      </div>
+      <button class="filter-btn">
+        <ion-icon name="funnel-outline"></ion-icon>
+        Filtrar
+      </button>
+      <span class="client-count">{{ filteredClients.length }} clientes</span>
+    </div>
+
+    <!-- Lista -->
+    <div class="list-area">
+
+      <!-- Loading -->
+      <div class="loading-state" *ngIf="loading">
+        <ion-spinner name="crescent"></ion-spinner>
+        <p>Carregando clientes...</p>
+      </div>
+
+      <!-- Lista preenchida -->
+      <div class="clients-list" *ngIf="!loading && filteredClients.length > 0">
+        <div class="client-card"
+             *ngFor="let client of paginatedClients"
+             (click)="viewClient(client)">
+
+          <div class="client-avatar"
+               [ngStyle]="{'background': getAvatarBg(client), 'color': getAvatarColor(client)}">
+            {{ getInitials(client.name) }}
+          </div>
+
+          <div class="client-info">
+            <div class="client-name">{{ client.name }}</div>
+            <div class="client-details">
+              <div class="detail-item">
+                <ion-icon name="call-outline"></ion-icon>
+                <span>{{ client.phone }}</span>
+              </div>
+              <div class="detail-item" *ngIf="client.email">
+                <ion-icon name="mail-outline"></ion-icon>
+                <span>{{ client.email }}</span>
+              </div>
+              <div class="detail-item whatsapp" *ngIf="client.whatsapp">
+                <ion-icon name="logo-whatsapp"></ion-icon>
+                <span>{{ client.whatsapp }}</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="client-right">
+            <span class="pets-badge" *ngIf="client.pet_count > 0">
+              {{ client.pet_count }} {{ client.pet_count === 1 ? 'pet' : 'pets' }}
+            </span>
+            <ion-icon name="chevron-forward-outline" class="chevron"></ion-icon>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Empty State Redesenhado ── -->
+      <div class="empty-state" *ngIf="!loading && filteredClients.length === 0">
+
+        <!-- Quando há busca sem resultado -->
+        <ng-container *ngIf="searchTerm">
+          <div class="empty-icon-wrap search-empty">
+            <ion-icon name="search-outline"></ion-icon>
+          </div>
+          <h3>Nenhum resultado encontrado</h3>
+          <p>Não encontramos clientes para <strong>"{{ searchTerm }}"</strong>.<br>Tente outro termo de busca.</p>
+        </ng-container>
+
+        <!-- Quando não há clientes cadastrados -->
+        <ng-container *ngIf="!searchTerm">
+          <!-- Ilustração com bolinhas decorativas -->
+          <div class="empty-illustration">
+            <div class="empty-bubble b1"></div>
+            <div class="empty-bubble b2"></div>
+            <div class="empty-bubble b3"></div>
+            <div class="empty-circle">
+              <svg width="64" height="64" viewBox="0 0 24 24" fill="none"
+                   stroke="#2e7d4f" stroke-width="1.2" stroke-linecap="round">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                <circle cx="9" cy="7" r="4"/>
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+              </svg>
+            </div>
+            <div class="empty-add-dot">
+              <ion-icon name="add-outline"></ion-icon>
+            </div>
+          </div>
+
+          <h3>Nenhum cliente cadastrado</h3>
+          <p>Seus clientes aparecerão aqui depois de cadastrados.<br>Comece adicionando o primeiro!</p>
+
+          <button class="btn-empty-action" (click)="openModal()">
+            <ion-icon name="person-add-outline"></ion-icon>
+            Cadastrar primeiro cliente
+          </button>
+
+          <div class="empty-hint">
+            <ion-icon name="information-circle-outline"></ion-icon>
+            <span>Você também pode importar clientes via planilha</span>
+          </div>
+        </ng-container>
+
+      </div>
+    </div>
+
+    <!-- Paginação -->
+    <div class="pagination" *ngIf="!loading && filteredClients.length > pageSize">
+      <span class="pagination-info">
+        Mostrando {{ pageStart }}–{{ pageEnd }} de {{ filteredClients.length }} clientes
+      </span>
+      <div class="pagination-pages">
+        <button class="page-btn" *ngFor="let p of pages"
+                [class.active]="p === currentPage"
+                (click)="goToPage(p)">{{ p }}</button>
+        <button class="page-btn" (click)="goToPage(currentPage + 1)"
+                [disabled]="currentPage === totalPages">→</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     MODAL — NOVO / EDITAR CLIENTE
+════════════════════════════════════════ -->
+<div class="modal-overlay" *ngIf="showModal" (click)="closeModal()">
+  <div class="modal-box" (click)="$event.stopPropagation()">
+
+    <div class="modal-header">
+      <div class="modal-header-left">
+        <div class="modal-icon">
+          <ion-icon name="person-outline"></ion-icon>
+        </div>
+        <div>
+          <div class="modal-title">{{ isEditing ? 'Editar cliente' : 'Novo cliente' }}</div>
+          <div class="modal-subtitle">Preencha os dados do cliente</div>
+        </div>
+      </div>
+      <button class="modal-close" (click)="closeModal()">
+        <ion-icon name="close-outline"></ion-icon>
+      </button>
+    </div>
+
+    <div class="modal-body">
+
+      <div class="form-section-title">Dados pessoais</div>
+
+      <div class="form-group full">
+        <label>Nome completo <span class="required">*</span></label>
+        <div class="input-wrap" [class.error]="formErrors.name">
+          <ion-icon name="person-outline"></ion-icon>
+          <input type="text" placeholder="Ex: Maria Silva"
+                 [(ngModel)]="form.name" (blur)="validateField('name')" />
+        </div>
+        <span class="field-error" *ngIf="formErrors.name">Nome é obrigatório</span>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>CPF</label>
+          <div class="input-wrap">
+            <ion-icon name="card-outline"></ion-icon>
+            <input type="text" placeholder="000.000.000-00" [(ngModel)]="form.cpf" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Data de nascimento</label>
+          <div class="input-wrap">
+            <ion-icon name="calendar-outline"></ion-icon>
+            <input type="date" [(ngModel)]="form.birthdate" />
+          </div>
+        </div>
+      </div>
+
+      <div class="form-section-title">Contato</div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Telefone <span class="required">*</span></label>
+          <div class="input-wrap" [class.error]="formErrors.phone">
+            <ion-icon name="call-outline"></ion-icon>
+            <input type="tel" placeholder="(17) 99999-9999"
+                   [(ngModel)]="form.phone" (blur)="validateField('phone')" />
+          </div>
+          <span class="field-error" *ngIf="formErrors.phone">Telefone é obrigatório</span>
+        </div>
+        <div class="form-group">
+          <label>WhatsApp</label>
+          <div class="input-wrap">
+            <ion-icon name="logo-whatsapp" class="whatsapp-icon"></ion-icon>
+            <input type="tel" placeholder="(17) 99999-9999" [(ngModel)]="form.whatsapp" />
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group full">
+        <label>E-mail</label>
+        <div class="input-wrap" [class.error]="formErrors.email">
+          <ion-icon name="mail-outline"></ion-icon>
+          <input type="email" placeholder="cliente@email.com"
+                 [(ngModel)]="form.email" (blur)="validateField('email')" />
+        </div>
+        <span class="field-error" *ngIf="formErrors.email">E-mail inválido</span>
+      </div>
+
+      <div class="form-section-title">
+        Endereço <span class="optional">(opcional)</span>
+      </div>
+
+      <div class="form-row address-row">
+        <div class="form-group">
+          <label>Rua / Avenida</label>
+          <div class="input-wrap">
+            <ion-icon name="location-outline"></ion-icon>
+            <input type="text" placeholder="Ex: Rua das Flores" [(ngModel)]="form.street" />
+          </div>
+        </div>
+        <div class="form-group number-group">
+          <label>Nº</label>
+          <div class="input-wrap">
+            <input type="text" placeholder="123" [(ngModel)]="form.number" />
+          </div>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Bairro</label>
+          <div class="input-wrap">
+            <input type="text" placeholder="Ex: Centro" [(ngModel)]="form.neighborhood" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Cidade</label>
+          <div class="input-wrap">
+            <input type="text" placeholder="Ex: Bebedouro" [(ngModel)]="form.city" />
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group full">
+        <label>Observações</label>
+        <textarea placeholder="Alguma observação sobre o cliente..."
+                  [(ngModel)]="form.notes" rows="3"></textarea>
+      </div>
+
+    </div>
+
+    <div class="modal-footer">
+      <span class="required-note">* campos obrigatórios</span>
+      <div class="modal-actions">
+        <button class="btn-cancel" (click)="closeModal()">Cancelar</button>
+        <button class="btn-save" (click)="saveClient()" [disabled]="saving">
+          <ion-icon name="checkmark-outline"></ion-icon>
+          {{ saving ? 'Salvando...' : (isEditing ? 'Atualizar' : 'Salvar cliente') }}
+        </button>
+      </div>
+    </div>
+
+  </div>
+</div>

@@ -1,0 +1,8 @@
+node_modules/
+.angular/
+.ionic/
+www/
+platforms/
+plugins/
+*.log
+package-lock.json

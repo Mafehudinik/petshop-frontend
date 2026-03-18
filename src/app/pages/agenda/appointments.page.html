@@ -1,0 +1,320 @@
+<div class="agenda-layout">
+
+  <!-- ═══════════════════════════════════════
+       SIDEBAR
+  ════════════════════════════════════════ -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <svg width="32" height="28" viewBox="0 0 130 110" fill="none">
+        <ellipse cx="42" cy="72" rx="22" ry="18" fill="none" stroke="rgba(255,255,255,0.9)" stroke-width="3"/>
+        <circle cx="42" cy="48" r="14" fill="none" stroke="rgba(255,255,255,0.9)" stroke-width="3"/>
+        <path d="M30 40 Q24 28 28 22 Q36 30 36 40" fill="none" stroke="rgba(255,255,255,0.9)" stroke-width="3" stroke-linejoin="round"/>
+        <path d="M64 66 Q76 56 74 46" fill="none" stroke="rgba(255,255,255,0.9)" stroke-width="2.5" stroke-linecap="round"/>
+        <ellipse cx="88" cy="74" rx="20" ry="16" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="2.5"/>
+        <circle cx="88" cy="52" r="12" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="2.5"/>
+        <path d="M78 44 L74 30 L84 40" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="2.5" stroke-linejoin="round"/>
+        <path d="M96 42 L100 28 L92 40" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="2.5" stroke-linejoin="round"/>
+        <path d="M65 58 C65 58 58 50 58 45 C58 41 62 38 65 42 C68 38 72 41 72 45 C72 50 65 58 65 58Z" fill="#e53935"/>
+      </svg>
+      <div class="sidebar-brand">
+        <span class="brand-name">RABICHOS</span>
+        <span class="brand-sub">Banho &amp; Tosa</span>
+      </div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <a class="nav-item" routerLink="/dashboard" routerDirection="root" routerLinkActive="active">
+        <ion-icon name="grid-outline"></ion-icon><span>Dashboard</span>
+      </a>
+      <a class="nav-item" routerLink="/clients" routerDirection="root" routerLinkActive="active">
+        <ion-icon name="people-outline"></ion-icon><span>Clientes</span>
+      </a>
+      <a class="nav-item" routerLink="/pets" routerDirection="root" routerLinkActive="active">
+        <ion-icon name="paw-outline"></ion-icon><span>Pets</span>
+      </a>
+      <a class="nav-item" routerLink="/appointments" routerDirection="root" routerLinkActive="active">
+        <ion-icon name="calendar-outline"></ion-icon><span>Agenda</span>
+      </a>
+      <a class="nav-item" routerLink="/hotel" routerDirection="root" routerLinkActive="active">
+        <ion-icon name="home-outline"></ion-icon><span>Hotel</span>
+      </a>
+      <a class="nav-item" routerLink="/sales" routerDirection="root" routerLinkActive="active">
+        <ion-icon name="cash-outline"></ion-icon><span>Vendas (PDV)</span>
+      </a>
+      <a class="nav-item" routerLink="/products" routerDirection="root" routerLinkActive="active">
+        <ion-icon name="cube-outline"></ion-icon><span>Estoque</span>
+      </a>
+      <a class="nav-item" routerLink="/services" routerDirection="root" routerLinkActive="active">
+        <ion-icon name="cut-outline"></ion-icon><span>Serviços</span>
+      </a>
+      <a class="nav-item" routerLink="/reports" routerDirection="root" routerLinkActive="active">
+        <ion-icon name="bar-chart-outline"></ion-icon><span>Relatórios</span>
+      </a>
+      <a class="nav-item" routerLink="/whatsapp" routerDirection="root" routerLinkActive="active">
+        <ion-icon name="logo-whatsapp"></ion-icon><span>WhatsApp</span>
+      </a>
+    </nav>
+
+    <div class="sidebar-user">
+      <div class="user-avatar">{{ userInitials }}</div>
+      <div class="user-info">
+        <span class="user-name">{{ currentUser?.name || 'Admin' }}</span>
+        <span class="user-role">{{ currentUser?.role || 'Administrador' }}</span>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ═══════════════════════════════════════
+       CONTEÚDO
+  ════════════════════════════════════════ -->
+  <div class="main-content">
+
+    <!-- Topbar -->
+    <div class="topbar">
+      <div class="topbar-left">
+        <div class="page-title">Agenda</div>
+        <div class="page-subtitle">Gerencie todos os agendamentos</div>
+      </div>
+      <button class="btn-primary" (click)="openModal()">
+        <ion-icon name="add-outline"></ion-icon>
+        Novo agendamento
+      </button>
+    </div>
+
+    <!-- Barra de controle -->
+    <div class="control-bar">
+      <div class="week-nav">
+        <button class="nav-btn" (click)="prevPeriod()">
+          <ion-icon name="chevron-back-outline"></ion-icon>
+        </button>
+        <span class="period-label">{{ periodLabel }}</span>
+        <button class="nav-btn" (click)="nextPeriod()">
+          <ion-icon name="chevron-forward-outline"></ion-icon>
+        </button>
+        <button class="today-btn" (click)="goToToday()">Hoje</button>
+      </div>
+
+      <div class="spacer"></div>
+
+      <div class="view-toggle">
+        <button [class.active]="viewMode === 'day'" (click)="setView('day')">Dia</button>
+        <button [class.active]="viewMode === 'week'" (click)="setView('week')">Semana</button>
+      </div>
+
+      <div class="employee-filter">
+        <ion-icon name="person-outline"></ion-icon>
+        <select [(ngModel)]="selectedEmployee" (change)="filterByEmployee()">
+          <option value="">Todos funcionários</option>
+          <option *ngFor="let emp of employees" [value]="emp.id">{{ emp.name }}</option>
+        </select>
+        <ion-icon name="chevron-down-outline" class="select-arrow"></ion-icon>
+      </div>
+    </div>
+
+    <!-- ── Vista Semanal ── -->
+    <div class="calendar-area" *ngIf="viewMode === 'week'">
+      <div class="calendar-header">
+        <div class="time-gutter"></div>
+        <div class="day-header" *ngFor="let day of weekDays"
+             [class.today]="day.isToday" [class.weekend]="day.isWeekend">
+          <span class="day-name">{{ day.name }}</span>
+          <span class="day-number">{{ day.number }}</span>
+        </div>
+      </div>
+
+      <div class="calendar-grid">
+        <ng-container *ngFor="let slot of timeSlots">
+          <div class="time-label">{{ slot.label }}</div>
+          <div class="time-cell" *ngFor="let day of weekDays"
+               [class.today]="day.isToday" [class.weekend]="day.isWeekend"
+               (click)="onCellClick(day, slot)">
+            <div class="appt-block"
+                 *ngFor="let appt of getAppointments(day.date, slot.hour)"
+                 [ngClass]="appt.status"
+                 (click)="onApptClick($event, appt)">
+              <div class="appt-title">{{ appt.pet_name }} · {{ appt.service_name }}</div>
+              <div class="appt-sub">{{ appt.appointment_time }} – {{ appt.end_time }} · {{ appt.employee_name }}</div>
+            </div>
+          </div>
+        </ng-container>
+      </div>
+    </div>
+
+    <!-- ── Vista Diária ── -->
+    <div class="day-view" *ngIf="viewMode === 'day'">
+      <div class="day-list">
+        <div class="day-slot" *ngFor="let slot of timeSlots">
+          <div class="time-label">{{ slot.label }}</div>
+          <div class="day-slot-content">
+            <div class="appt-block"
+                 *ngFor="let appt of getDayAppointments(slot.hour)"
+                 [ngClass]="appt.status"
+                 (click)="onApptClick($event, appt)">
+              <div class="appt-title">{{ appt.pet_name }} · {{ appt.service_name }}</div>
+              <div class="appt-sub">{{ appt.appointment_time }} · {{ appt.client_name }} · {{ appt.employee_name }}</div>
+            </div>
+            <div class="empty-slot" *ngIf="getDayAppointments(slot.hour).length === 0"
+                 (click)="onTimeSlotClick(slot.hour)"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Legenda -->
+    <div class="legend-bar">
+      <span class="legend-title">Legenda:</span>
+      <div class="legend-item" *ngFor="let l of statusLegend">
+        <div class="legend-dot" [ngStyle]="{'background': l.bg, 'border-left': '3px solid ' + l.border}"></div>
+        <span>{{ l.label }}</span>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     MODAL — NOVO / EDITAR AGENDAMENTO
+════════════════════════════════════════ -->
+<div class="modal-overlay" *ngIf="showModal" (click)="closeModal()">
+  <div class="modal-box" (click)="$event.stopPropagation()">
+
+    <!-- Header -->
+    <div class="modal-header">
+      <div class="modal-header-left">
+        <div class="modal-icon">
+          <ion-icon name="calendar-outline"></ion-icon>
+        </div>
+        <div>
+          <div class="modal-title">{{ isEditing ? 'Editar agendamento' : 'Novo agendamento' }}</div>
+          <div class="modal-subtitle">Preencha os dados do agendamento</div>
+        </div>
+      </div>
+      <button class="modal-close" (click)="closeModal()">
+        <ion-icon name="close-outline"></ion-icon>
+      </button>
+    </div>
+
+    <!-- Corpo -->
+    <div class="modal-body">
+
+      <!-- ── Pet ── -->
+      <div class="form-section-title">Pet e Tutor</div>
+
+      <div class="form-group full">
+        <label>Pet <span class="required">*</span></label>
+
+        <!-- Pet selecionado -->
+        <div class="pet-selected" *ngIf="selectedPet">
+          <div class="pet-icon-sm">
+            <ion-icon name="paw-outline"></ion-icon>
+          </div>
+          <div class="pet-info-sm">
+            <div class="pet-name-sm">{{ selectedPet.name }}</div>
+            <div class="pet-detail-sm">{{ selectedPet.breed }} · {{ selectedPet.client_name }}</div>
+          </div>
+          <ion-icon name="close-outline" class="remove-item" (click)="clearPet()"></ion-icon>
+        </div>
+
+        <!-- Busca de pet -->
+        <div class="input-wrap" *ngIf="!selectedPet" [class.error]="formErrors.pet_id">
+          <ion-icon name="search-outline"></ion-icon>
+          <input type="text" placeholder="Buscar pet pelo nome..."
+                 [(ngModel)]="petSearch" (input)="searchPets()" />
+        </div>
+
+        <!-- Dropdown resultados -->
+        <div class="search-dropdown" *ngIf="petResults.length > 0 && !selectedPet">
+          <div class="search-result" *ngFor="let p of petResults" (click)="selectPet(p)">
+            <div class="result-icon green"><ion-icon name="paw-outline"></ion-icon></div>
+            <div>
+              <div class="result-name">{{ p.name }}</div>
+              <div class="result-sub">{{ p.breed }} · {{ p.client_name }}</div>
+            </div>
+          </div>
+        </div>
+        <span class="field-error" *ngIf="formErrors.pet_id">{{ formErrors.pet_id }}</span>
+      </div>
+
+      <!-- ── Serviço ── -->
+      <div class="form-section-title">Serviço</div>
+
+      <div class="form-group full">
+        <label>Serviço <span class="required">*</span></label>
+        <div class="service-grid">
+          <div class="service-option"
+               *ngFor="let s of services"
+               [class.active]="form.service_id === s.id"
+               (click)="selectService(s)">
+            <div class="service-name">{{ s.name }}</div>
+            <div class="service-meta">{{ s.price | currency:'BRL':'symbol':'1.2-2' }} · ~{{ s.duration }} min</div>
+          </div>
+        </div>
+        <span class="field-error" *ngIf="formErrors.service_id">{{ formErrors.service_id }}</span>
+      </div>
+
+      <!-- ── Data e Hora ── -->
+      <div class="form-section-title">Data e Hora</div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Data <span class="required">*</span></label>
+          <div class="input-wrap" [class.error]="formErrors.appointment_date">
+            <ion-icon name="calendar-outline"></ion-icon>
+            <input type="date" [(ngModel)]="form.appointment_date"
+                   (blur)="validateField('appointment_date')" />
+          </div>
+          <span class="field-error" *ngIf="formErrors.appointment_date">{{ formErrors.appointment_date }}</span>
+        </div>
+        <div class="form-group">
+          <label>Horário <span class="required">*</span></label>
+          <div class="input-wrap" [class.error]="formErrors.appointment_time">
+            <ion-icon name="time-outline"></ion-icon>
+            <input type="time" [(ngModel)]="form.appointment_time"
+                   (blur)="validateField('appointment_time')" />
+          </div>
+          <span class="field-error" *ngIf="formErrors.appointment_time">{{ formErrors.appointment_time }}</span>
+        </div>
+      </div>
+
+      <!-- ── Funcionário ── -->
+      <div class="form-section-title">Funcionário</div>
+
+      <div class="form-group full">
+        <label>Responsável <span class="required">*</span></label>
+        <div class="employee-grid">
+          <div class="employee-option"
+               *ngFor="let emp of employees"
+               [class.active]="form.employee_id === emp.id"
+               (click)="selectEmployee(emp)">
+            <div class="emp-avatar" [ngStyle]="{'background': getEmpAvatarBg(emp.id)}">
+              {{ getInitials(emp.name) }}
+            </div>
+            <span class="emp-name">{{ emp.name }}</span>
+          </div>
+        </div>
+        <span class="field-error" *ngIf="formErrors.employee_id">{{ formErrors.employee_id }}</span>
+      </div>
+
+      <!-- ── Observações ── -->
+      <div class="form-group full">
+        <label>Observações <span class="optional">(opcional)</span></label>
+        <textarea placeholder="Alguma observação sobre o agendamento..."
+                  [(ngModel)]="form.notes" rows="3"></textarea>
+      </div>
+
+    </div>
+
+    <!-- Footer -->
+    <div class="modal-footer">
+      <span class="required-note">* campos obrigatórios</span>
+      <div class="modal-actions">
+        <button class="btn-cancel" (click)="closeModal()">Cancelar</button>
+        <button class="btn-save" (click)="saveAppointment()" [disabled]="saving">
+          <ion-icon name="checkmark-outline"></ion-icon>
+          {{ saving ? 'Salvando...' : (isEditing ? 'Atualizar' : 'Confirmar agendamento') }}
+        </button>
+      </div>
+    </div>
+
+  </div>
+</div>

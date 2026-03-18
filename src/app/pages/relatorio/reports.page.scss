@@ -1,0 +1,417 @@
+// Reports Page - Rabichos Banho & Tosa
+
+.reports-layout {
+  display: flex;
+  height: 100vh;
+  width: 100%;
+  overflow: hidden;
+  background: #f5f7f5;
+}
+
+// SIDEBAR (reutilizando estilos padrão)
+.sidebar {
+  width: 210px;
+  flex-shrink: 0;
+  background: linear-gradient(160deg, #1b5e35 0%, #2e7d4f 60%, #1a4a28 100%);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.sidebar-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 20px 16px 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  flex-shrink: 0;
+}
+
+.sidebar-brand {
+  display: flex;
+  flex-direction: column;
+
+  .brand-name {
+    color: #fff;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    line-height: 1.1;
+  }
+
+  .brand-sub {
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 10px;
+    font-style: italic;
+    letter-spacing: 0.08em;
+  }
+}
+
+.sidebar-nav {
+  flex: 1;
+  padding: 12px 0;
+  overflow-y: auto;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 16px;
+  border-left: 3px solid transparent;
+  cursor: pointer;
+  transition: background 0.15s;
+  text-decoration: none;
+
+  ion-icon {
+    font-size: 16px;
+    color: rgba(255, 255, 255, 0.6);
+    flex-shrink: 0;
+  }
+
+  span {
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.6);
+  }
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.08);
+  }
+
+  &.active {
+    background: rgba(255, 255, 255, 0.15);
+    border-left-color: #fff;
+
+    ion-icon,
+    span {
+      color: #fff;
+    }
+  }
+}
+
+.sidebar-user {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 16px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  flex-shrink: 0;
+}
+
+.user-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 700;
+  color: #fff;
+  flex-shrink: 0;
+}
+
+.user-info {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+
+  .user-name {
+    font-size: 12px;
+    font-weight: 600;
+    color: #fff;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .user-role {
+    font-size: 10px;
+    color: rgba(255, 255, 255, 0.5);
+  }
+}
+
+// CONTEÚDO PRINCIPAL
+.main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 28px;
+  background: #fff;
+  border-bottom: 1px solid #e5e7eb;
+  flex-shrink: 0;
+}
+
+.topbar-left {
+  .page-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: #1b5e35;
+    margin-bottom: 2px;
+  }
+
+  .page-subtitle {
+    font-size: 13px;
+    color: #888;
+  }
+}
+
+.filter-bar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 28px;
+  background: #fff;
+  border-bottom: 1px solid #e5e7eb;
+  flex-shrink: 0;
+}
+
+.filter-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  label {
+    font-size: 13px;
+    color: #666;
+    white-space: nowrap;
+  }
+
+  input[type="date"] {
+    padding: 8px 12px;
+    border: 1.5px solid #d0e8d8;
+    border-radius: 6px;
+    font-size: 13px;
+    color: #333;
+    background: #f7fbf8;
+    transition: border-color 0.2s;
+
+    &:focus {
+      outline: none;
+      border-color: #2e7d4f;
+      background: #fff;
+    }
+  }
+}
+
+.btn-apply {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  background: #1b5e35;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+  margin-left: auto;
+
+  &:hover {
+    background: #2e7d4f;
+  }
+
+  ion-icon {
+    font-size: 16px;
+  }
+}
+
+// TABS
+.tabs {
+  display: flex;
+  gap: 4px;
+  padding: 16px 28px 0;
+  background: #fff;
+  border-bottom: 2px solid #e5e7eb;
+  flex-shrink: 0;
+}
+
+.tab {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 16px;
+  background: transparent;
+  border: none;
+  border-bottom: 3px solid transparent;
+  font-size: 14px;
+  font-weight: 600;
+  color: #888;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-bottom: -2px;
+
+  ion-icon {
+    font-size: 18px;
+  }
+
+  &:hover {
+    color: #1b5e35;
+    background: #f5f7f5;
+  }
+
+  &.active {
+    color: #1b5e35;
+    border-bottom-color: #1b5e35;
+  }
+}
+
+// CONTEÚDO DOS RELATÓRIOS
+.reports-content {
+  flex: 1;
+  padding: 24px 28px;
+  overflow-y: auto;
+}
+
+.report-section {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.summary-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+}
+
+.summary-card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.card-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #1b5e35, #2e7d4f);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+
+  ion-icon {
+    font-size: 28px;
+    color: #fff;
+  }
+}
+
+.card-info {
+  flex: 1;
+}
+
+.card-label {
+  font-size: 13px;
+  color: #888;
+  margin-bottom: 4px;
+}
+
+.card-value {
+  font-size: 24px;
+  font-weight: 700;
+  color: #1b5e35;
+}
+
+.report-card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+
+  h3 {
+    font-size: 16px;
+    font-weight: 700;
+    color: #1b5e35;
+    margin: 0 0 20px 0;
+  }
+}
+
+.table-wrapper {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+
+  thead {
+    tr {
+      border-bottom: 2px solid #e5e7eb;
+    }
+
+    th {
+      padding: 12px;
+      text-align: left;
+      font-size: 13px;
+      font-weight: 600;
+      color: #666;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+  }
+
+  tbody {
+    tr {
+      border-bottom: 1px solid #f5f7f5;
+      transition: background 0.2s;
+
+      &:hover {
+        background: #f5f7f5;
+      }
+    }
+
+    td {
+      padding: 14px 12px;
+      font-size: 14px;
+      color: #333;
+    }
+  }
+}
+
+// RESPONSIVO
+@media (max-width: 768px) {
+  .reports-layout {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    width: 100%;
+    height: auto;
+  }
+
+  .filter-bar {
+    flex-wrap: wrap;
+  }
+
+  .tabs {
+    overflow-x: auto;
+  }
+
+  .summary-cards {
+    grid-template-columns: 1fr;
+  }
+
+  table {
+    font-size: 12px;
+
+    th,
+    td {
+      padding: 8px;
+    }
+  }
+}

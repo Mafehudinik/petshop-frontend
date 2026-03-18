@@ -1,0 +1,408 @@
+// =============================================
+// Clients Page - Rabichos Banho & Tosa
+// =============================================
+
+// ── Layout geral ─────────────────────────────
+.clients-layout {
+  display: flex;
+  height: 100vh;
+  width: 100%;
+  overflow: hidden;
+  background: #f5f7f5;
+}
+
+// ══════════════════════════════════════════════
+// SIDEBAR
+// ══════════════════════════════════════════════
+.sidebar {
+  width: 210px; flex-shrink: 0;
+  background: linear-gradient(160deg, #1b5e35 0%, #2e7d4f 60%, #1a4a28 100%);
+  display: flex; flex-direction: column; overflow: hidden;
+}
+.sidebar-logo {
+  display: flex; align-items: center; gap: 10px;
+  padding: 20px 16px 16px; border-bottom: 1px solid rgba(255,255,255,0.1); flex-shrink: 0;
+}
+.sidebar-brand {
+  display: flex; flex-direction: column;
+  .brand-name { color: #fff; font-size: 13px; font-weight: 700; letter-spacing: 0.12em; line-height: 1.1; }
+  .brand-sub  { color: rgba(255,255,255,0.5); font-size: 10px; font-style: italic; letter-spacing: 0.08em; }
+}
+.sidebar-nav { flex: 1; padding: 12px 0; overflow-y: auto; }
+.nav-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 16px; border-left: 3px solid transparent;
+  cursor: pointer; transition: background 0.15s; text-decoration: none;
+  ion-icon { font-size: 16px; color: rgba(255,255,255,0.6); flex-shrink: 0; }
+  span      { font-size: 13px; color: rgba(255,255,255,0.6); }
+  &:hover   { background: rgba(255,255,255,0.08); }
+  &.active  { background: rgba(255,255,255,0.15); border-left-color: #fff;
+    ion-icon, span { color: #fff; } }
+}
+.sidebar-user {
+  display: flex; align-items: center; gap: 8px;
+  padding: 12px 16px; border-top: 1px solid rgba(255,255,255,0.1); flex-shrink: 0;
+}
+.user-avatar {
+  width: 30px; height: 30px; border-radius: 50%; background: #2e7d4f;
+  border: 1.5px solid rgba(255,255,255,0.3);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px; font-weight: 600; color: #fff; flex-shrink: 0;
+}
+.user-info {
+  display: flex; flex-direction: column;
+  .user-name { color: #fff; font-size: 12px; font-weight: 500; line-height: 1.2; }
+  .user-role { color: rgba(255,255,255,0.4); font-size: 10px; }
+}
+
+// ══════════════════════════════════════════════
+// CONTEÚDO PRINCIPAL
+// ══════════════════════════════════════════════
+.main-content { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+
+.topbar {
+  background: #fff; border-bottom: 0.5px solid #e8ede8;
+  padding: 14px 24px; display: flex; align-items: center;
+  justify-content: space-between; flex-shrink: 0;
+}
+.topbar-left {
+  .page-title    { font-size: 17px; font-weight: 600; color: #1b5e35; margin-bottom: 2px; }
+  .page-subtitle { font-size: 11px; color: #888; }
+}
+.btn-primary {
+  display: flex; align-items: center; gap: 6px;
+  background: #1b5e35; color: #fff; border: none;
+  border-radius: 10px; padding: 10px 18px;
+  font-size: 13px; font-weight: 600; cursor: pointer;
+  box-shadow: 0 2px 8px rgba(27,94,53,0.25);
+  transition: background 0.15s, box-shadow 0.15s; white-space: nowrap;
+  ion-icon { font-size: 16px; }
+  &:hover { background: #174f2d; box-shadow: 0 4px 12px rgba(27,94,53,0.3); }
+}
+
+.filter-bar {
+  padding: 12px 24px; background: #fff;
+  border-bottom: 0.5px solid #e8ede8;
+  display: flex; align-items: center; gap: 10px; flex-shrink: 0;
+}
+.search-box {
+  flex: 1; display: flex; align-items: center; gap: 8px;
+  background: #f5f7f5; border: 1.5px solid #dde8dd;
+  border-radius: 10px; padding: 9px 14px; transition: border-color 0.15s;
+  &:focus-within { border-color: #1b5e35; background: #fff; box-shadow: 0 0 0 3px rgba(27,94,53,0.08); }
+  ion-icon { font-size: 15px; color: #888; flex-shrink: 0; }
+  input {
+    flex: 1; border: none; outline: none; font-size: 13px;
+    color: #1a1a1a; background: transparent;
+    &::placeholder { color: #bbb; }
+  }
+}
+.filter-btn {
+  display: flex; align-items: center; gap: 6px;
+  background: #fff; border: 1.5px solid #dde8dd;
+  border-radius: 10px; padding: 9px 14px;
+  font-size: 13px; color: #555; cursor: pointer; white-space: nowrap;
+  ion-icon { font-size: 14px; color: #1b5e35; }
+  &:hover { border-color: #1b5e35; }
+}
+.client-count { font-size: 12px; color: #888; white-space: nowrap; }
+
+// ── Lista ─────────────────────────────────────
+.list-area {
+  flex: 1; overflow-y: auto; padding: 16px 24px;
+  display: flex; flex-direction: column; gap: 8px;
+}
+.clients-list { display: flex; flex-direction: column; gap: 8px; }
+
+.client-card {
+  background: #fff; border-radius: 12px; border: 1px solid #e8ede8;
+  padding: 14px 16px; display: flex; align-items: center; gap: 14px;
+  cursor: pointer; transition: border-color 0.15s, box-shadow 0.15s;
+  &:hover { border-color: #1b5e35; box-shadow: 0 2px 10px rgba(27,94,53,0.08); }
+}
+.client-avatar {
+  width: 44px; height: 44px; border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; font-size: 16px; font-weight: 600;
+}
+.client-info { flex: 1; min-width: 0; }
+.client-name { font-size: 14px; font-weight: 500; color: #1a1a1a; margin-bottom: 4px; }
+.client-details { display: flex; flex-wrap: wrap; gap: 14px; }
+.detail-item {
+  display: flex; align-items: center; gap: 4px;
+  font-size: 12px; color: #888;
+  ion-icon { font-size: 12px; color: #1b5e35; flex-shrink: 0; }
+  &.whatsapp ion-icon { color: #25d366; }
+}
+.client-right { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+.pets-badge {
+  background: #EAF3DE; color: #3B6D11; font-size: 10px; font-weight: 500;
+  padding: 3px 8px; border-radius: 10px; white-space: nowrap;
+}
+.chevron { font-size: 14px; color: #ccc; }
+
+// ══════════════════════════════════════════════
+// EMPTY STATE REDESENHADO
+// ══════════════════════════════════════════════
+.empty-state {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 20px;
+  text-align: center;
+
+  // ── quando há busca sem resultado ──
+  .empty-icon-wrap {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: #f0f4f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 16px;
+
+    ion-icon { font-size: 36px; color: #a0bca0; }
+  }
+
+  h3 {
+    font-size: 20px;
+    font-weight: 700;
+    color: #1b3a28;
+    margin: 0 0 8px;
+  }
+
+  p {
+    font-size: 13px;
+    color: #888;
+    line-height: 1.6;
+    margin: 0 0 28px;
+    max-width: 320px;
+
+    strong { color: #1b5e35; }
+  }
+
+  // ── ilustração com círculo gradiente + bolinhas ──
+  .empty-illustration {
+    position: relative;
+    margin-bottom: 28px;
+
+    .empty-circle {
+      width: 140px;
+      height: 140px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #EAF3DE, #d0e8c8);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      svg { filter: drop-shadow(0 2px 4px rgba(27,94,53,0.1)); }
+    }
+
+    // bolinha com ícone + flutuando
+    .empty-add-dot {
+      position: absolute;
+      top: -6px;
+      right: -6px;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: #fff;
+      border: 2px solid #EAF3DE;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      ion-icon { font-size: 16px; color: #1b5e35; }
+    }
+
+    // bolinhas decorativas
+    .empty-bubble {
+      position: absolute;
+      border-radius: 50%;
+
+      &.b1 { width: 24px; height: 24px; background: #EAF3DE; bottom: -2px; left: -14px; }
+      &.b2 { width: 16px; height: 16px; background: #d0e8c8; top: 18px;   left: -20px; }
+      &.b3 { width: 10px; height: 10px; background: #c8e0bc; bottom: 18px; right: -14px; }
+    }
+  }
+
+  // ── botão principal no empty state ──
+  .btn-empty-action {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: #1b5e35;
+    color: #fff;
+    border: none;
+    border-radius: 11px;
+    padding: 12px 24px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 4px 14px rgba(27,94,53,0.3);
+    transition: background 0.15s, transform 0.1s, box-shadow 0.15s;
+    margin-bottom: 14px;
+
+    ion-icon { font-size: 18px; }
+
+    &:hover {
+      background: #174f2d;
+      transform: translateY(-1px);
+      box-shadow: 0 6px 18px rgba(27,94,53,0.35);
+    }
+    &:active { transform: translateY(0); }
+  }
+
+  // ── dica de importação ──
+  .empty-hint {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    font-size: 11px;
+    color: #aaa;
+    ion-icon { font-size: 12px; }
+  }
+}
+
+.loading-state {
+  flex: 1; display: flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: 12px; padding: 60px 20px;
+  ion-spinner { width: 36px; height: 36px; color: #1b5e35; }
+  p { font-size: 13px; color: #888; margin: 0; }
+}
+
+// ── Paginação ─────────────────────────────────
+.pagination {
+  background: #fff; border-top: 0.5px solid #e8ede8;
+  padding: 10px 24px; display: flex; align-items: center;
+  justify-content: space-between; flex-shrink: 0;
+}
+.pagination-info  { font-size: 12px; color: #888; }
+.pagination-pages { display: flex; gap: 4px; }
+.page-btn {
+  width: 28px; height: 28px; border-radius: 6px;
+  border: 0.5px solid #e0e0e0; background: #fff;
+  font-size: 12px; color: #888; cursor: pointer;
+  display: flex; align-items: center; justify-content: center; transition: all 0.15s;
+  &.active   { background: #EAF3DE; border-color: #d0e8d8; color: #1b5e35; font-weight: 600; }
+  &:hover:not(.active):not(:disabled) { border-color: #1b5e35; color: #1b5e35; }
+  &:disabled { opacity: 0.4; cursor: not-allowed; }
+}
+
+// ══════════════════════════════════════════════
+// MODAL — NOVO / EDITAR CLIENTE
+// ══════════════════════════════════════════════
+.modal-overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.45);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 1000; padding: 24px; animation: fadeIn 0.15s ease;
+}
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+.modal-box {
+  background: #fff; border-radius: 16px;
+  width: 100%; max-width: 520px; max-height: 90vh;
+  display: flex; flex-direction: column;
+  box-shadow: 0 24px 60px rgba(0,0,0,0.18); overflow: hidden;
+  animation: slideUp 0.2s ease;
+}
+@keyframes slideUp {
+  from { transform: translateY(16px); opacity: 0; }
+  to   { transform: translateY(0);    opacity: 1; }
+}
+
+.modal-header {
+  background: linear-gradient(135deg, #1b5e35, #2e7d4f);
+  padding: 18px 20px; display: flex; align-items: center;
+  justify-content: space-between; flex-shrink: 0;
+}
+.modal-header-left { display: flex; align-items: center; gap: 10px; }
+.modal-icon {
+  width: 36px; height: 36px; background: rgba(255,255,255,0.15);
+  border-radius: 9px; display: flex; align-items: center; justify-content: center;
+  ion-icon { font-size: 18px; color: #fff; }
+}
+.modal-title    { color: #fff; font-size: 15px; font-weight: 600; line-height: 1.2; }
+.modal-subtitle { color: rgba(255,255,255,0.6); font-size: 11px; margin-top: 1px; }
+.modal-close {
+  width: 30px; height: 30px; background: rgba(255,255,255,0.15);
+  border: none; border-radius: 7px; display: flex; align-items: center; justify-content: center; cursor: pointer;
+  ion-icon { font-size: 16px; color: #fff; }
+  &:hover { background: rgba(255,255,255,0.25); }
+}
+
+.modal-body { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 12px; }
+
+.form-section-title {
+  font-size: 10px; color: #1b5e35; font-weight: 600;
+  text-transform: uppercase; letter-spacing: 0.08em; margin-top: 4px; margin-bottom: -2px;
+  .optional { font-weight: 400; color: #aaa; text-transform: none; letter-spacing: 0; font-size: 10px; }
+}
+.form-group {
+  display: flex; flex-direction: column; gap: 4px; flex: 1;
+  &.full { flex: 1 1 100%; }
+  label { font-size: 11px; color: #555; font-weight: 500; }
+}
+.form-row {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
+  &.address-row { grid-template-columns: 3fr 1fr; }
+}
+.input-wrap {
+  display: flex; align-items: center; gap: 8px;
+  border: 1px solid #e0e0e0; border-radius: 9px;
+  padding: 9px 12px; background: #fff; transition: border-color 0.15s, box-shadow 0.15s;
+  &:focus-within { border-color: #1b5e35; box-shadow: 0 0 0 3px rgba(27,94,53,0.08); }
+  &.error { border-color: #e53935; box-shadow: 0 0 0 3px rgba(229,57,53,0.08); }
+  ion-icon { font-size: 14px; color: #888; flex-shrink: 0;
+    &.whatsapp-icon { color: #25d366; } }
+  input {
+    flex: 1; border: none; outline: none; font-size: 13px;
+    color: #1a1a1a; background: transparent; min-width: 0;
+    &::placeholder { color: #bbb; }
+    &[type="date"] { color: #1a1a1a; }
+  }
+}
+textarea {
+  border: 1px solid #e0e0e0; border-radius: 9px;
+  padding: 9px 12px; font-size: 13px; color: #1a1a1a;
+  background: #fff; resize: vertical; outline: none; font-family: inherit;
+  min-height: 70px; transition: border-color 0.15s, box-shadow 0.15s;
+  &::placeholder { color: #bbb; }
+  &:focus { border-color: #1b5e35; box-shadow: 0 0 0 3px rgba(27,94,53,0.08); }
+}
+.field-error { font-size: 11px; color: #e53935; margin-top: 2px; }
+.required    { color: #e53935; }
+.optional    { font-weight: 400; color: #aaa; font-size: 10px; }
+
+.modal-footer {
+  padding: 14px 20px 18px; border-top: 0.5px solid #f0f0f0;
+  display: flex; align-items: center; justify-content: space-between; flex-shrink: 0;
+}
+.required-note { font-size: 11px; color: #aaa; }
+.modal-actions { display: flex; gap: 8px; }
+.btn-cancel {
+  padding: 9px 18px; border-radius: 9px; border: 1px solid #e0e0e0;
+  background: #f5f7f5; color: #555; font-size: 13px; cursor: pointer;
+  &:hover { border-color: #1b5e35; color: #1b5e35; }
+}
+.btn-save {
+  display: flex; align-items: center; gap: 6px;
+  padding: 9px 20px; border-radius: 9px; border: none;
+  background: #1b5e35; color: #fff; font-size: 13px; font-weight: 600; cursor: pointer;
+  ion-icon { font-size: 15px; }
+  &:hover    { background: #174f2d; }
+  &:disabled { opacity: 0.6; cursor: not-allowed; }
+}
+
+// ── Responsivo ────────────────────────────────
+@media (max-width: 768px) {
+  .sidebar    { display: none; }
+  .filter-bar { flex-wrap: wrap; }
+  .modal-overlay { padding: 16px; }
+  .modal-box     { max-height: 95vh; }
+  .form-row      { grid-template-columns: 1fr; }
+  .form-row.address-row { grid-template-columns: 1fr; }
+}

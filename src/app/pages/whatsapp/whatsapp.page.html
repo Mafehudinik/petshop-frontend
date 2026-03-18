@@ -1,0 +1,262 @@
+<div class="whatsapp-layout">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <svg width="32" height="28" viewBox="0 0 130 110" fill="none">
+        <ellipse cx="42" cy="72" rx="22" ry="18" fill="none" stroke="rgba(255,255,255,0.9)" stroke-width="3"/>
+        <circle cx="42" cy="48" r="14" fill="none" stroke="rgba(255,255,255,0.9)" stroke-width="3"/>
+        <path d="M30 40 Q24 28 28 22 Q36 30 36 40" fill="none" stroke="rgba(255,255,255,0.9)" stroke-width="3" stroke-linejoin="round"/>
+        <path d="M64 66 Q76 56 74 46" fill="none" stroke="rgba(255,255,255,0.9)" stroke-width="2.5" stroke-linecap="round"/>
+        <ellipse cx="88" cy="74" rx="20" ry="16" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="2.5"/>
+        <circle cx="88" cy="52" r="12" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="2.5"/>
+        <path d="M78 44 L74 30 L84 40" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="2.5" stroke-linejoin="round"/>
+        <path d="M96 42 L100 28 L92 40" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="2.5" stroke-linejoin="round"/>
+        <path d="M65 58 C65 58 58 50 58 45 C58 41 62 38 65 42 C68 38 72 41 72 45 C72 50 65 58 65 58Z" fill="#e53935"/>
+      </svg>
+      <div class="sidebar-brand">
+        <span class="brand-name">RABICHOS</span>
+        <span class="brand-sub">Banho &amp; Tosa</span>
+      </div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <a class="nav-item" routerLink="/dashboard" routerDirection="root" routerLinkActive="active">
+        <ion-icon name="grid-outline"></ion-icon><span>Dashboard</span>
+      </a>
+      <a class="nav-item" routerLink="/clients" routerDirection="root" routerLinkActive="active">
+        <ion-icon name="people-outline"></ion-icon><span>Clientes</span>
+      </a>
+      <a class="nav-item" routerLink="/pets" routerDirection="root" routerLinkActive="active">
+        <ion-icon name="paw-outline"></ion-icon><span>Pets</span>
+      </a>
+      <a class="nav-item" routerLink="/appointments" routerDirection="root" routerLinkActive="active">
+        <ion-icon name="calendar-outline"></ion-icon><span>Agenda</span>
+      </a>
+      <a class="nav-item" routerLink="/hotel" routerDirection="root" routerLinkActive="active">
+        <ion-icon name="home-outline"></ion-icon><span>Hotel</span>
+      </a>
+      <a class="nav-item" routerLink="/sales" routerDirection="root" routerLinkActive="active">
+        <ion-icon name="cash-outline"></ion-icon><span>Vendas (PDV)</span>
+      </a>
+      <a class="nav-item" routerLink="/products" routerDirection="root" routerLinkActive="active">
+        <ion-icon name="cube-outline"></ion-icon><span>Estoque</span>
+      </a>
+      <a class="nav-item" routerLink="/services" routerDirection="root" routerLinkActive="active">
+        <ion-icon name="cut-outline"></ion-icon><span>Serviços</span>
+      </a>
+      <a class="nav-item" routerLink="/reports" routerDirection="root" routerLinkActive="active">
+        <ion-icon name="bar-chart-outline"></ion-icon><span>Relatórios</span>
+      </a>
+      <a class="nav-item" routerLink="/whatsapp" routerDirection="root" routerLinkActive="active">
+        <ion-icon name="logo-whatsapp"></ion-icon><span>WhatsApp</span>
+      </a>
+    </nav>
+
+    <div class="sidebar-user">
+      <div class="user-avatar">{{ userInitials }}</div>
+      <div class="user-info">
+        <span class="user-name">{{ currentUser?.name || 'Admin' }}</span>
+        <span class="user-role">{{ currentUser?.role || 'Administrador' }}</span>
+      </div>
+    </div>
+  </aside>
+
+  <!-- CONTEÚDO -->
+  <div class="main-content">
+
+    <!-- Topbar -->
+    <div class="topbar">
+      <div class="topbar-left">
+        <div class="page-title">Integração WhatsApp</div>
+        <div class="page-subtitle">Configure e envie mensagens automáticas</div>
+      </div>
+      <div class="status-badge" [class.active]="config.active">
+        <ion-icon name="ellipse"></ion-icon>
+        {{ config.active ? 'Ativo' : 'Inativo' }}
+      </div>
+    </div>
+
+    <div class="content-wrapper">
+
+      <!-- Configurações -->
+      <div class="config-section">
+        <div class="section-header">
+          <h3>Configurações da API</h3>
+          <p>Configure a integração com a API do WhatsApp Business</p>
+        </div>
+
+        <div class="config-form">
+          <div class="form-group">
+            <label>Chave da API</label>
+            <input type="text" [(ngModel)]="config.api_key" placeholder="Digite a chave da API" />
+          </div>
+
+          <div class="form-group">
+            <label>Número do WhatsApp</label>
+            <input type="text" [(ngModel)]="config.phone_number" placeholder="Ex: 5516999999999" />
+          </div>
+
+          <div class="form-group">
+            <label>Status da integração</label>
+            <div class="toggle-group">
+              <label class="toggle">
+                <input type="checkbox" [(ngModel)]="config.active" />
+                <span class="toggle-slider"></span>
+                <span class="toggle-label">{{ config.active ? 'Ativado' : 'Desativado' }}</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="divider"></div>
+
+          <div class="section-header">
+            <h4>Mensagens automáticas</h4>
+            <p>Escolha quais mensagens serão enviadas automaticamente</p>
+          </div>
+
+          <div class="auto-messages">
+            <label class="checkbox-item">
+              <input type="checkbox" [(ngModel)]="config.auto_confirm" />
+              <div class="checkbox-content">
+                <ion-icon name="checkmark-circle-outline"></ion-icon>
+                <div>
+                  <div class="checkbox-title">Confirmação de agendamento</div>
+                  <div class="checkbox-desc">Envia confirmação quando um agendamento é criado</div>
+                </div>
+              </div>
+            </label>
+
+            <label class="checkbox-item">
+              <input type="checkbox" [(ngModel)]="config.auto_reminder" />
+              <div class="checkbox-content">
+                <ion-icon name="time-outline"></ion-icon>
+                <div>
+                  <div class="checkbox-title">Lembrete de agendamento</div>
+                  <div class="checkbox-desc">Envia lembrete 1 dia antes do agendamento</div>
+                </div>
+              </div>
+            </label>
+
+            <label class="checkbox-item">
+              <input type="checkbox" [(ngModel)]="config.auto_ready" />
+              <div class="checkbox-content">
+                <ion-icon name="notifications-outline"></ion-icon>
+                <div>
+                  <div class="checkbox-title">Pet pronto</div>
+                  <div class="checkbox-desc">Avisa quando o pet está pronto para buscar</div>
+                </div>
+              </div>
+            </label>
+          </div>
+
+          <button class="btn-save" (click)="saveConfig()">
+            <ion-icon name="save-outline"></ion-icon>
+            Salvar configurações
+          </button>
+        </div>
+      </div>
+
+      <!-- Envio manual -->
+      <div class="manual-section">
+        <div class="section-header">
+          <h3>Envio manual</h3>
+          <p>Agendamentos de hoje</p>
+        </div>
+
+        <div class="appointments-list">
+          <div class="appointment-item" *ngFor="let appointment of appointments">
+            <div class="appointment-info">
+              <div class="appointment-client">{{ appointment.client_name }}</div>
+              <div class="appointment-details">
+                {{ appointment.pet_name }} · {{ appointment.service_name }} · {{ appointment.appointment_time }}
+              </div>
+            </div>
+            <div class="appointment-actions">
+              <button class="btn-send" (click)="openSendModal(appointment, 'confirmation')">
+                <ion-icon name="send-outline"></ion-icon>
+              </button>
+            </div>
+          </div>
+
+          <div class="empty-state" *ngIf="appointments.length === 0">
+            <ion-icon name="calendar-outline"></ion-icon>
+            <p>Nenhum agendamento para hoje</p>
+          </div>
+        </div>
+
+        <!-- Histórico -->
+        <div class="section-header" style="margin-top: 32px;">
+          <h3>Histórico de mensagens</h3>
+          <p>Últimas 50 mensagens enviadas</p>
+        </div>
+
+        <div class="history-list">
+          <div class="history-item" *ngFor="let message of messageHistory">
+            <div class="history-icon">
+              <ion-icon name="logo-whatsapp"></ion-icon>
+            </div>
+            <div class="history-info">
+              <div class="history-title">{{ message.title }}</div>
+              <div class="history-message">{{ message.message }}</div>
+              <div class="history-date">{{ message.created_at | date: 'dd/MM/yyyy HH:mm' }}</div>
+            </div>
+          </div>
+
+          <div class="empty-state" *ngIf="messageHistory.length === 0">
+            <ion-icon name="chatbubbles-outline"></ion-icon>
+            <p>Nenhuma mensagem enviada ainda</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+<!-- Modal de envio -->
+<div class="modal-overlay" *ngIf="showSendModal" (click)="closeSendModal()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h2>Enviar mensagem</h2>
+      <button class="btn-close" (click)="closeSendModal()">
+        <ion-icon name="close-outline"></ion-icon>
+      </button>
+    </div>
+
+    <div class="modal-body">
+      <div class="message-preview">
+        <ion-icon name="logo-whatsapp"></ion-icon>
+        <div>
+          <div class="preview-label">Tipo de mensagem:</div>
+          <div class="preview-type">{{ getMessageTypeLabel(messageType) }}</div>
+        </div>
+      </div>
+
+      <div class="recipient-info">
+        <div class="info-row">
+          <span class="label">Cliente:</span>
+          <span class="value">{{ selectedAppointment?.client_name }}</span>
+        </div>
+        <div class="info-row">
+          <span class="label">Pet:</span>
+          <span class="value">{{ selectedAppointment?.pet_name }}</span>
+        </div>
+        <div class="info-row">
+          <span class="label">Serviço:</span>
+          <span class="value">{{ selectedAppointment?.service_name }}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn-cancel" (click)="closeSendModal()">Cancelar</button>
+      <button class="btn-send-confirm" (click)="sendMessage()">
+        <ion-icon name="send-outline"></ion-icon>
+        Enviar mensagem
+      </button>
+    </div>
+  </div>
+</div>

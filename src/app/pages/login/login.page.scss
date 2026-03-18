@@ -1,0 +1,284 @@
+// =============================================
+// Login Page - Rabichos Banho & Tosa
+// =============================================
+
+ion-content {
+  --background: transparent;
+  --padding-start: 0;
+  --padding-end: 0;
+  --padding-top: 0;
+  --padding-bottom: 0;
+}
+
+.login-wrapper {
+  display: flex;
+  align-items: stretch;
+  min-height: 100vh;
+  width: 100%;
+}
+
+// ── Painel esquerdo ─────────────────────────
+.login-left {
+  flex: 1.1;
+  background: linear-gradient(160deg, #1b5e35 0%, #2e7d4f 60%, #1a4a28 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2.5rem 2rem;
+  position: relative;
+  overflow: hidden;
+
+  // Círculos decorativos de fundo
+  .bg-circle {
+    position: absolute;
+    border-radius: 50%;
+    border: 1.5px solid rgba(255, 255, 255, 0.07);
+    pointer-events: none;
+
+    &.circle-top {
+      width: 280px;
+      height: 280px;
+      top: -80px;
+      left: -80px;
+    }
+
+    &.circle-bottom {
+      width: 200px;
+      height: 200px;
+      bottom: -60px;
+      right: -60px;
+    }
+  }
+}
+
+.brand-logo {
+  margin-bottom: 1rem;
+  position: relative;
+  z-index: 1;
+}
+
+.brand-name {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 2rem;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  line-height: 1;
+  position: relative;
+  z-index: 1;
+}
+
+.brand-subtitle {
+  font-family: Georgia, serif;
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.65);
+  letter-spacing: 0.22em;
+  margin-top: 4px;
+  font-style: italic;
+  position: relative;
+  z-index: 1;
+}
+
+.brand-divider {
+  width: 50px;
+  height: 1.5px;
+  background: rgba(255, 255, 255, 0.25);
+  margin: 1.5rem 0;
+}
+
+.brand-tagline {
+  font-size: 0.78rem;
+  color: rgba(255, 255, 255, 0.6);
+  text-align: center;
+  line-height: 1.6;
+  max-width: 180px;
+  position: relative;
+  z-index: 1;
+}
+
+.brand-city {
+  position: absolute;
+  bottom: 1.2rem;
+  font-size: 0.7rem;
+  color: rgba(255, 255, 255, 0.3);
+  letter-spacing: 0.05em;
+}
+
+// ── Painel direito ───────────────────────────
+.login-right {
+  flex: 1;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 2.8rem 2.5rem;
+}
+
+.form-header {
+  margin-bottom: 2rem;
+
+  h1 {
+    font-family: Georgia, serif;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #1b5e35;
+    margin: 0 0 4px 0;
+  }
+
+  p {
+    font-size: 0.85rem;
+    color: #888;
+    margin: 0;
+  }
+}
+
+// ── Campos do formulário ─────────────────────
+.field-group {
+  margin-bottom: 1.1rem;
+
+  label {
+    display: block;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: #444;
+    margin-bottom: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+}
+
+.field-input {
+  display: flex;
+  align-items: center;
+  border: 1.5px solid #d0e8d8;
+  border-radius: 10px;
+  padding: 0 14px;
+  height: 46px;
+  background: #f7fbf8;
+  transition: border-color 0.2s, box-shadow 0.2s;
+
+  &:focus-within {
+    border-color: #2e7d4f;
+    box-shadow: 0 0 0 3px rgba(46, 125, 79, 0.12);
+    background: #fff;
+  }
+
+  svg {
+    flex-shrink: 0;
+    margin-right: 10px;
+  }
+
+  ion-input {
+    --padding-start: 0;
+    --padding-end: 0;
+    --padding-top: 0;
+    --padding-bottom: 0;
+    --background: transparent;
+    --placeholder-color: #bbb;
+    font-size: 0.88rem;
+    flex: 1;
+  }
+}
+
+.forgot-password {
+  text-align: right;
+  margin-top: 6px;
+
+  span {
+    font-size: 0.75rem;
+    color: #2e7d4f;
+    cursor: pointer;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+// ── Botão entrar ─────────────────────────────
+.login-button {
+  margin-top: 1.6rem;
+  --background: #1b5e35;
+  --background-hover: #2e7d4f;
+  --background-activated: #2e7d4f;
+  --border-radius: 10px;
+  --box-shadow: none;
+  height: 48px;
+  font-weight: 700;
+  font-size: 0.95rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+// ── Divisor ──────────────────────────────────
+.form-divider {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 1.5rem 0;
+
+  span {
+    flex: 1;
+    height: 1px;
+    background: #e8e8e8;
+  }
+
+  small {
+    font-size: 0.72rem;
+    color: #bbb;
+  }
+}
+
+// ── Badge inferior ───────────────────────────
+.brand-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #f0f9f4;
+  border: 1px solid #d0e8d8;
+  border-radius: 20px;
+  padding: 6px 16px;
+  align-self: center;
+
+  span {
+    font-size: 0.75rem;
+    color: #2e7d4f;
+    font-weight: 600;
+  }
+}
+
+.system-version {
+  font-size: 0.7rem;
+  color: #bbb;
+  text-align: center;
+  margin-top: 10px;
+}
+
+// ── Responsivo (mobile) ──────────────────────
+@media (max-width: 768px) {
+  .login-wrapper {
+    flex-direction: column;
+  }
+
+  .login-left {
+    flex: none;
+    padding: 2.5rem 1.5rem;
+    min-height: 280px;
+
+    .brand-city {
+      position: relative;
+      bottom: auto;
+      margin-top: 1rem;
+    }
+  }
+
+  .login-right {
+    padding: 2rem 1.5rem;
+  }
+
+  .brand-name {
+    font-size: 1.6rem;
+  }
+}

@@ -1,0 +1,160 @@
+// =============================================
+// Global Styles - Rabichos Banho & Tosa
+// =============================================
+
+:root {
+  --primary-color:   #1b5e35;
+  --primary-dark:    #174f2d;
+  --primary-light:   #2e7d4f;
+  --accent-color:    #3d8a61;
+  --success-color:   #52a05c;
+  --warning-color:   #f59e0b;
+  --danger-color:    #e53935;
+  --background:      #f5f7f5;
+  --surface:         #ffffff;
+  /* Corrigido: texto e bordas com contraste adequado */
+  --text-primary:    #1a1a1a;
+  --text-secondary:  #888888;
+  --border-color:    #e8ede8;
+  --shadow:          0 1px 3px 0 rgba(0, 0, 0, 0.06);
+  --shadow-lg:       0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  background-color: var(--background);
+  color: var(--text-primary);
+}
+
+ion-content {
+  --background: var(--background);
+}
+
+ion-toolbar {
+  --background: var(--primary-color);
+  --color: white;
+  --border-width: 0;
+  box-shadow: var(--shadow);
+}
+
+ion-card {
+  --background: var(--surface);
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+  margin: 16px 0;
+}
+
+ion-button {
+  --border-radius: 8px;
+  text-transform: none;
+  font-weight: 600;
+  letter-spacing: 0;
+}
+
+ion-button.primary {
+  --background: var(--primary-color);
+  --background-hover: var(--primary-dark);
+}
+
+ion-button.success {
+  --background: var(--success-color);
+}
+
+ion-button.danger {
+  --background: var(--danger-color);
+}
+
+ion-item {
+  --background: var(--surface);
+  --border-color: var(--border-color);
+  --padding-start: 16px;
+  --inner-padding-end: 16px;
+}
+
+ion-input, ion-textarea, ion-select {
+  --background: var(--surface);
+  --padding-start: 12px;
+  --padding-end: 12px;
+}
+
+ion-badge {
+  border-radius: 12px;
+  padding: 4px 12px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+// Scrollbar
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--background);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--primary-light);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--primary-color);
+}
+
+// Utilitários
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* .card removido do global para não conflitar com os cards das páginas */
+
+.btn {
+  padding: 10px 20px;
+  border-radius: 8px;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-primary {
+  background: var(--primary-color);
+  color: white;
+
+  &:hover {
+    background: var(--primary-dark);
+  }
+}
+
+.grid {
+  display: grid;
+  gap: 20px;
+}
+
+.grid-2 { grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
+.grid-3 { grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); }
+.grid-4 { grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.fade-in {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+@media (max-width: 768px) {
+  .container { padding: 10px; }
+  .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+}

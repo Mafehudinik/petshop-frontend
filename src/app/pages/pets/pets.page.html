@@ -1,0 +1,373 @@
+<div class="pets-layout">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <svg width="32" height="28" viewBox="0 0 130 110" fill="none">
+        <ellipse cx="42" cy="72" rx="22" ry="18" fill="none" stroke="rgba(255,255,255,0.9)" stroke-width="3"/>
+        <circle cx="42" cy="48" r="14" fill="none" stroke="rgba(255,255,255,0.9)" stroke-width="3"/>
+        <path d="M30 40 Q24 28 28 22 Q36 30 36 40" fill="none" stroke="rgba(255,255,255,0.9)" stroke-width="3" stroke-linejoin="round"/>
+        <path d="M64 66 Q76 56 74 46" fill="none" stroke="rgba(255,255,255,0.9)" stroke-width="2.5" stroke-linecap="round"/>
+        <ellipse cx="88" cy="74" rx="20" ry="16" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="2.5"/>
+        <circle cx="88" cy="52" r="12" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="2.5"/>
+        <path d="M78 44 L74 30 L84 40" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="2.5" stroke-linejoin="round"/>
+        <path d="M96 42 L100 28 L92 40" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="2.5" stroke-linejoin="round"/>
+        <path d="M65 58 C65 58 58 50 58 45 C58 41 62 38 65 42 C68 38 72 41 72 45 C72 50 65 58 65 58Z" fill="#e53935"/>
+      </svg>
+      <div class="sidebar-brand">
+        <span class="brand-name">RABICHOS</span>
+        <span class="brand-sub">Banho &amp; Tosa</span>
+      </div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <a class="nav-item" routerLink="/dashboard" routerDirection="root" routerLinkActive="active">
+        <ion-icon name="grid-outline"></ion-icon><span>Dashboard</span>
+      </a>
+      <a class="nav-item" routerLink="/clients" routerDirection="root" routerLinkActive="active">
+        <ion-icon name="people-outline"></ion-icon><span>Clientes</span>
+      </a>
+      <a class="nav-item" routerLink="/pets" routerDirection="root" routerLinkActive="active">
+        <ion-icon name="paw-outline"></ion-icon><span>Pets</span>
+      </a>
+      <a class="nav-item" routerLink="/appointments" routerDirection="root" routerLinkActive="active">
+        <ion-icon name="calendar-outline"></ion-icon><span>Agenda</span>
+      </a>
+      <a class="nav-item" routerLink="/hotel" routerDirection="root" routerLinkActive="active">
+        <ion-icon name="home-outline"></ion-icon><span>Hotel</span>
+      </a>
+      <a class="nav-item" routerLink="/sales" routerDirection="root" routerLinkActive="active">
+        <ion-icon name="cash-outline"></ion-icon><span>Vendas (PDV)</span>
+      </a>
+      <a class="nav-item" routerLink="/products" routerDirection="root" routerLinkActive="active">
+        <ion-icon name="cube-outline"></ion-icon><span>Estoque</span>
+      </a>
+      <a class="nav-item" routerLink="/services" routerDirection="root" routerLinkActive="active">
+        <ion-icon name="cut-outline"></ion-icon><span>Serviços</span>
+      </a>
+      <a class="nav-item" routerLink="/reports" routerDirection="root" routerLinkActive="active">
+        <ion-icon name="bar-chart-outline"></ion-icon><span>Relatórios</span>
+      </a>
+      <a class="nav-item" routerLink="/whatsapp" routerDirection="root" routerLinkActive="active">
+        <ion-icon name="logo-whatsapp"></ion-icon><span>WhatsApp</span>
+      </a>
+    </nav>
+
+    <div class="sidebar-user">
+      <div class="user-avatar">{{ userInitials }}</div>
+      <div class="user-info">
+        <span class="user-name">{{ currentUser?.name || 'Admin' }}</span>
+        <span class="user-role">{{ currentUser?.role || 'Administrador' }}</span>
+      </div>
+    </div>
+  </aside>
+
+  <!-- CONTEÚDO -->
+  <div class="main-content">
+
+    <!-- Topbar -->
+    <div class="topbar">
+      <div class="topbar-left">
+        <div class="page-title">Gestão de pets</div>
+        <div class="page-subtitle">Todos os pets cadastrados no sistema</div>
+      </div>
+      <button class="btn-primary" (click)="openModal()">
+        <ion-icon name="add-outline"></ion-icon>
+        Novo pet
+      </button>
+    </div>
+
+    <!-- Filtros -->
+    <div class="filter-bar">
+      <div class="search-box">
+        <ion-icon name="search-outline"></ion-icon>
+        <input type="text" placeholder="Buscar por nome, raça ou tutor..."
+               [(ngModel)]="searchTerm" (input)="filterPets()" />
+      </div>
+      <div class="species-filter">
+        <button class="species-btn"
+                *ngFor="let s of speciesOptions"
+                [class.active]="selectedSpecies === s.value"
+                (click)="filterBySpecies(s.value)">
+          {{ s.label }}
+        </button>
+      </div>
+      <span class="pet-count">{{ filteredPets.length }} pets</span>
+    </div>
+
+    <!-- Área principal -->
+    <div class="list-area">
+
+      <div class="loading-state" *ngIf="loading">
+        <ion-spinner name="crescent"></ion-spinner>
+        <p>Carregando pets...</p>
+      </div>
+
+      <!-- Grid de cards -->
+      <div class="pets-grid" *ngIf="!loading && filteredPets.length > 0">
+        <div class="pet-card" *ngFor="let pet of paginatedPets" (click)="viewPet(pet)">
+
+          <div class="pet-card-header">
+            <div class="pet-avatar" [ngStyle]="{'background': getAvatarBg(pet), 'color': getAvatarColor(pet)}">
+              <svg *ngIf="pet.species !== 'gato'" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                   [attr.stroke]="getAvatarColor(pet)" stroke-width="1.8" stroke-linecap="round">
+                <circle cx="11" cy="12" r="4"/><circle cx="6" cy="8" r="2"/>
+                <circle cx="16" cy="8" r="2"/><circle cx="4" cy="14" r="2"/><circle cx="18" cy="14" r="2"/>
+              </svg>
+              <svg *ngIf="pet.species === 'gato'" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                   [attr.stroke]="getAvatarColor(pet)" stroke-width="1.8" stroke-linecap="round">
+                <circle cx="12" cy="12" r="4"/>
+                <path d="M8 8 Q6 4 8 2"/><path d="M16 8 Q18 4 16 2"/>
+                <path d="M8 16 Q6 20 8 22"/><path d="M16 16 Q18 20 16 22"/>
+              </svg>
+            </div>
+            <div class="pet-main-info">
+              <div class="pet-name">{{ pet.name }}</div>
+              <div class="pet-breed">{{ pet.breed }} · {{ pet.sex === 'f' ? 'Fêmea' : 'Macho' }}</div>
+            </div>
+            <div class="species-badge" [ngClass]="pet.species">{{ speciesLabel(pet.species) }}</div>
+          </div>
+
+          <div class="pet-stats">
+            <div class="pet-stat">
+              <span class="stat-label">Idade</span>
+              <span class="stat-value">{{ pet.age }}</span>
+            </div>
+            <div class="pet-stat">
+              <span class="stat-label">Peso</span>
+              <span class="stat-value">{{ pet.weight }} kg</span>
+            </div>
+          </div>
+
+          <div class="allergy-tags" *ngIf="pet.allergies">
+            <span class="allergy-tag">Alergia: {{ pet.allergies }}</span>
+          </div>
+
+          <div class="pet-footer">
+            <div class="tutor-info">
+              <div class="tutor-avatar"
+                   [ngStyle]="{'background': getAvatarBg(pet), 'color': getAvatarColor(pet)}">
+                {{ getInitials(pet.client_name) }}
+              </div>
+              <span class="tutor-name">{{ pet.client_name }}</span>
+            </div>
+            <button class="history-btn" (click)="viewHistory($event, pet)">Ver histórico</button>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ── Empty State Redesenhado ── -->
+      <div class="empty-state" *ngIf="!loading && filteredPets.length === 0">
+
+        <!-- Busca sem resultado -->
+        <ng-container *ngIf="searchTerm">
+          <div class="empty-icon-wrap search-empty">
+            <ion-icon name="search-outline"></ion-icon>
+          </div>
+          <h3>Nenhum resultado encontrado</h3>
+          <p>Não encontramos pets para <strong>"{{ searchTerm }}"</strong>.<br>Tente outro termo de busca.</p>
+        </ng-container>
+
+        <!-- Sem pets cadastrados -->
+        <ng-container *ngIf="!searchTerm">
+          <div class="empty-illustration">
+            <div class="empty-bubble b1"></div>
+            <div class="empty-bubble b2"></div>
+            <div class="empty-bubble b3"></div>
+            <div class="empty-circle">
+              <svg width="64" height="64" viewBox="0 0 24 24" fill="none"
+                   stroke="#2e7d4f" stroke-width="1.2" stroke-linecap="round">
+                <circle cx="11" cy="12" r="4"/><circle cx="6" cy="8" r="2"/>
+                <circle cx="16" cy="8" r="2"/><circle cx="4" cy="14" r="2"/><circle cx="18" cy="14" r="2"/>
+              </svg>
+            </div>
+            <div class="empty-add-dot">
+              <ion-icon name="add-outline"></ion-icon>
+            </div>
+          </div>
+
+          <h3>Nenhum pet cadastrado</h3>
+          <p>Os pets dos seus clientes aparecerão aqui.<br>Comece cadastrando o primeiro!</p>
+
+          <button class="btn-empty-action" (click)="openModal()">
+            <ion-icon name="paw-outline"></ion-icon>
+            Cadastrar primeiro pet
+          </button>
+
+          <div class="empty-hint">
+            <ion-icon name="information-circle-outline"></ion-icon>
+            <span>Você pode vincular pets a clientes já cadastrados</span>
+          </div>
+        </ng-container>
+
+      </div>
+    </div>
+
+    <!-- Paginação -->
+    <div class="pagination" *ngIf="!loading && filteredPets.length > pageSize">
+      <span class="pagination-info">
+        Mostrando {{ pageStart }}–{{ pageEnd }} de {{ filteredPets.length }} pets
+      </span>
+      <div class="pagination-pages">
+        <button class="page-btn" *ngFor="let p of pages"
+                [class.active]="p === currentPage"
+                (click)="goToPage(p)">{{ p }}</button>
+        <button class="page-btn" (click)="goToPage(currentPage + 1)"
+                [disabled]="currentPage === totalPages">→</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- MODAL — NOVO / EDITAR PET -->
+<div class="modal-overlay" *ngIf="showModal" (click)="closeModal()">
+  <div class="modal-box" (click)="$event.stopPropagation()">
+
+    <div class="modal-header">
+      <div class="modal-header-left">
+        <div class="modal-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round">
+            <circle cx="11" cy="12" r="4"/><circle cx="6" cy="8" r="2"/>
+            <circle cx="16" cy="8" r="2"/><circle cx="4" cy="14" r="2"/><circle cx="18" cy="14" r="2"/>
+          </svg>
+        </div>
+        <div>
+          <div class="modal-title">{{ isEditing ? 'Editar pet' : 'Novo pet' }}</div>
+          <div class="modal-subtitle">Preencha os dados do pet</div>
+        </div>
+      </div>
+      <button class="modal-close" (click)="closeModal()">
+        <ion-icon name="close-outline"></ion-icon>
+      </button>
+    </div>
+
+    <div class="modal-body">
+
+      <div class="form-section-title">Identificação</div>
+
+      <div class="form-group full">
+        <label>Nome do pet <span class="required">*</span></label>
+        <div class="input-wrap" [class.error]="formErrors.name">
+          <ion-icon name="paw-outline"></ion-icon>
+          <input type="text" placeholder="Ex: Luna"
+                 [(ngModel)]="form.name" (blur)="validateField('name')" />
+        </div>
+        <span class="field-error" *ngIf="formErrors.name">{{ formErrors.name }}</span>
+      </div>
+
+      <div class="form-group full">
+        <label>Espécie <span class="required">*</span></label>
+        <div class="species-toggle">
+          <div class="species-option"
+               *ngFor="let s of speciesOptions.slice(1)"
+               [class.active]="form.species === s.value"
+               (click)="form.species = s.value">
+            <ion-icon [name]="s.icon"></ion-icon>
+            <span>{{ s.label }}</span>
+          </div>
+        </div>
+        <span class="field-error" *ngIf="formErrors.species">{{ formErrors.species }}</span>
+      </div>
+
+      <div class="form-row breed-sex-row">
+        <div class="form-group">
+          <label>Raça</label>
+          <div class="input-wrap">
+            <input type="text" placeholder="Ex: Golden Retriever" [(ngModel)]="form.breed" />
+          </div>
+        </div>
+        <div class="form-group sex-group">
+          <label>Sexo <span class="required">*</span></label>
+          <div class="sex-toggle">
+            <button [class.active]="form.sex === 'm'" (click)="form.sex = 'm'">Macho</button>
+            <button [class.active]="form.sex === 'f'" (click)="form.sex = 'f'">Fêmea</button>
+          </div>
+          <span class="field-error" *ngIf="formErrors.sex">{{ formErrors.sex }}</span>
+        </div>
+      </div>
+
+      <div class="form-section-title">Dados físicos</div>
+
+      <div class="form-row three-cols">
+        <div class="form-group">
+          <label>Idade</label>
+          <div class="input-wrap">
+            <input type="text" placeholder="Ex: 2 anos" [(ngModel)]="form.age" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Peso (kg)</label>
+          <div class="input-wrap">
+            <input type="number" placeholder="Ex: 8.5" step="0.1" [(ngModel)]="form.weight" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Pelagem</label>
+          <div class="input-wrap">
+            <input type="text" placeholder="Ex: Dourada" [(ngModel)]="form.coat" />
+          </div>
+        </div>
+      </div>
+
+      <div class="form-section-title">Tutor</div>
+
+      <div class="form-group full">
+        <label>Tutor responsável <span class="required">*</span></label>
+        <div class="tutor-selected" *ngIf="selectedClient">
+          <div class="tutor-avatar-sm">{{ getInitials(selectedClient.name) }}</div>
+          <span class="tutor-name-sm">{{ selectedClient.name }}</span>
+          <ion-icon name="close-outline" class="tutor-remove" (click)="clearClient()"></ion-icon>
+        </div>
+        <div class="input-wrap" *ngIf="!selectedClient" [class.error]="formErrors.client_id">
+          <ion-icon name="search-outline"></ion-icon>
+          <input type="text" placeholder="Buscar tutor pelo nome..."
+                 [(ngModel)]="clientSearch" (input)="searchClients()" />
+        </div>
+        <div class="client-dropdown" *ngIf="clientResults.length > 0 && !selectedClient">
+          <div class="client-result" *ngFor="let c of clientResults" (click)="selectClient(c)">
+            <div class="tutor-avatar-sm">{{ getInitials(c.name) }}</div>
+            <div>
+              <div class="result-name">{{ c.name }}</div>
+              <div class="result-phone">{{ c.phone }}</div>
+            </div>
+          </div>
+        </div>
+        <span class="field-error" *ngIf="formErrors.client_id">{{ formErrors.client_id }}</span>
+      </div>
+
+      <div class="form-section-title">
+        Saúde <span class="optional">(opcional)</span>
+      </div>
+
+      <div class="form-group full">
+        <label>Alergias</label>
+        <div class="input-wrap">
+          <ion-icon name="warning-outline" class="allergy-icon"></ion-icon>
+          <input type="text" placeholder="Ex: frango, amendoim..."
+                 [(ngModel)]="form.allergies" />
+        </div>
+      </div>
+
+      <div class="form-group full">
+        <label>Observações</label>
+        <textarea placeholder="Alguma observação sobre o pet..."
+                  [(ngModel)]="form.notes" rows="3"></textarea>
+      </div>
+
+    </div>
+
+    <div class="modal-footer">
+      <span class="required-note">* campos obrigatórios</span>
+      <div class="modal-actions">
+        <button class="btn-cancel" (click)="closeModal()">Cancelar</button>
+        <button class="btn-save" (click)="savePet()" [disabled]="saving">
+          <ion-icon name="checkmark-outline"></ion-icon>
+          {{ saving ? 'Salvando...' : (isEditing ? 'Atualizar' : 'Salvar pet') }}
+        </button>
+      </div>
+    </div>
+
+  </div>
+</div>

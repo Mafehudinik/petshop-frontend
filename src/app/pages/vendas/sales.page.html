@@ -1,0 +1,494 @@
+<div class="sales-layout">
+
+  <!-- ═══════════════════════════════════════
+       SIDEBAR
+  ════════════════════════════════════════ -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <svg width="32" height="28" viewBox="0 0 130 110" fill="none">
+        <ellipse cx="42" cy="72" rx="22" ry="18" fill="none" stroke="rgba(255,255,255,0.9)" stroke-width="3"/>
+        <circle cx="42" cy="48" r="14" fill="none" stroke="rgba(255,255,255,0.9)" stroke-width="3"/>
+        <path d="M30 40 Q24 28 28 22 Q36 30 36 40" fill="none" stroke="rgba(255,255,255,0.9)" stroke-width="3" stroke-linejoin="round"/>
+        <path d="M64 66 Q76 56 74 46" fill="none" stroke="rgba(255,255,255,0.9)" stroke-width="2.5" stroke-linecap="round"/>
+        <ellipse cx="88" cy="74" rx="20" ry="16" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="2.5"/>
+        <circle cx="88" cy="52" r="12" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="2.5"/>
+        <path d="M78 44 L74 30 L84 40" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="2.5" stroke-linejoin="round"/>
+        <path d="M96 42 L100 28 L92 40" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="2.5" stroke-linejoin="round"/>
+        <path d="M65 58 C65 58 58 50 58 45 C58 41 62 38 65 42 C68 38 72 41 72 45 C72 50 65 58 65 58Z" fill="#e53935"/>
+      </svg>
+      <div class="sidebar-brand">
+        <span class="brand-name">RABICHOS</span>
+        <span class="brand-sub">Banho &amp; Tosa</span>
+      </div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <a class="nav-item" routerLink="/dashboard" routerDirection="root" routerLinkActive="active">
+        <ion-icon name="grid-outline"></ion-icon><span>Dashboard</span>
+      </a>
+      <a class="nav-item" routerLink="/clients" routerDirection="root" routerLinkActive="active">
+        <ion-icon name="people-outline"></ion-icon><span>Clientes</span>
+      </a>
+      <a class="nav-item" routerLink="/pets" routerDirection="root" routerLinkActive="active">
+        <ion-icon name="paw-outline"></ion-icon><span>Pets</span>
+      </a>
+      <a class="nav-item" routerLink="/appointments" routerDirection="root" routerLinkActive="active">
+        <ion-icon name="calendar-outline"></ion-icon><span>Agenda</span>
+      </a>
+      <a class="nav-item" routerLink="/hotel" routerDirection="root" routerLinkActive="active">
+        <ion-icon name="home-outline"></ion-icon><span>Hotel</span>
+      </a>
+      <a class="nav-item" routerLink="/sales" routerDirection="root" routerLinkActive="active">
+        <ion-icon name="cash-outline"></ion-icon><span>Vendas (PDV)</span>
+      </a>
+      <a class="nav-item" routerLink="/products" routerDirection="root" routerLinkActive="active">
+        <ion-icon name="cube-outline"></ion-icon><span>Estoque</span>
+      </a>
+      <a class="nav-item" routerLink="/services" routerDirection="root" routerLinkActive="active">
+        <ion-icon name="cut-outline"></ion-icon><span>Serviços</span>
+      </a>
+      <a class="nav-item" routerLink="/reports" routerDirection="root" routerLinkActive="active">
+        <ion-icon name="bar-chart-outline"></ion-icon><span>Relatórios</span>
+      </a>
+      <a class="nav-item" routerLink="/whatsapp" routerDirection="root" routerLinkActive="active">
+        <ion-icon name="logo-whatsapp"></ion-icon><span>WhatsApp</span>
+      </a>
+    </nav>
+
+    <div class="sidebar-user">
+      <div class="user-avatar">{{ userInitials }}</div>
+      <div class="user-info">
+        <span class="user-name">{{ currentUser?.name || 'Admin' }}</span>
+        <span class="user-role">{{ currentUser?.role || 'Administrador' }}</span>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ═══════════════════════════════════════
+       CONTEÚDO
+  ════════════════════════════════════════ -->
+  <div class="main-content">
+
+    <!-- Topbar -->
+    <div class="topbar">
+      <div class="topbar-left">
+        <div class="page-title">Ponto de Venda</div>
+        <div class="page-subtitle">{{ today }} · Caixa aberto</div>
+      </div>
+      <div class="topbar-actions">
+        <button class="btn-secondary" (click)="goToHistory()">
+          <ion-icon name="receipt-outline"></ion-icon>
+          Histórico
+        </button>
+        <button class="btn-danger" (click)="openCloseRegisterModal()">
+          <ion-icon name="pulse-outline"></ion-icon>
+          Fechar caixa
+        </button>
+      </div>
+    </div>
+
+    <!-- Layout PDV: produtos | carrinho -->
+    <div class="pdv-area">
+
+      <!-- ── Coluna de produtos ── -->
+      <div class="products-col">
+
+        <!-- Busca + categorias -->
+        <div class="products-header">
+          <div class="search-box">
+            <ion-icon name="search-outline"></ion-icon>
+            <input type="text" placeholder="Buscar produto ou serviço..."
+                   [(ngModel)]="searchTerm" (input)="filterProducts()" />
+          </div>
+          <div class="categories">
+            <button class="cat-btn"
+                    *ngFor="let cat of categories"
+                    [class.active]="selectedCategory === cat.value"
+                    (click)="selectCategory(cat.value)">
+              {{ cat.label }}
+            </button>
+          </div>
+        </div>
+
+        <!-- Grid de produtos -->
+        <div class="products-grid-wrap">
+          <div class="products-grid">
+            <div class="product-card"
+                 *ngFor="let item of filteredProducts"
+                 (click)="addToCart(item)"
+                 [class.low-stock]="item.stock !== null && item.stock <= 3">
+              <div class="product-icon" [ngStyle]="{'background': item.iconBg}">
+                <ion-icon [name]="item.icon" [ngStyle]="{'color': item.iconColor}"></ion-icon>
+              </div>
+              <div class="product-name">{{ item.name }}</div>
+              <div class="product-meta">
+                {{ item.category }}
+                <span *ngIf="item.stock !== null"> · Estoque: {{ item.stock }}</span>
+              </div>
+              <div class="product-price">{{ item.price | currency:'BRL':'symbol':'1.2-2' }}</div>
+              <div class="low-stock-badge" *ngIf="item.stock !== null && item.stock <= 3">
+                Estoque baixo
+              </div>
+            </div>
+          </div>
+
+          <div class="empty-products" *ngIf="filteredProducts.length === 0">
+            <ion-icon name="search-outline"></ion-icon>
+            <p>Nenhum produto encontrado</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Carrinho ── -->
+      <div class="cart-col">
+
+        <!-- Cliente -->
+        <div class="cart-client">
+          <div class="section-label">Cliente</div>
+          <div class="client-box" *ngIf="selectedClient" >
+            <div class="client-avatar">{{ getInitials(selectedClient.name) }}</div>
+            <div class="client-info">
+              <div class="client-name">{{ selectedClient.name }}</div>
+              <div class="client-pet" *ngIf="selectedClient.pet">{{ selectedClient.pet }}</div>
+            </div>
+            <ion-icon name="close-outline" class="remove-client" (click)="clearClient()"></ion-icon>
+          </div>
+          <button class="select-client-btn" *ngIf="!selectedClient" (click)="selectClient()">
+            <ion-icon name="person-add-outline"></ion-icon>
+            Selecionar cliente
+          </button>
+        </div>
+
+        <!-- Itens do carrinho -->
+        <div class="cart-items">
+          <div class="section-label">Itens</div>
+
+          <div class="empty-cart" *ngIf="cart.length === 0">
+            <ion-icon name="cart-outline"></ion-icon>
+            <p>Carrinho vazio</p>
+            <span>Clique em um produto para adicionar</span>
+          </div>
+
+          <div class="cart-item" *ngFor="let item of cart">
+            <div class="cart-item-info">
+              <div class="cart-item-name">{{ item.name }}</div>
+              <div class="cart-item-unit">{{ item.price | currency:'BRL':'symbol':'1.2-2' }} · un</div>
+            </div>
+            <div class="qty-control">
+              <button (click)="decreaseQty(item)">−</button>
+              <span>{{ item.qty }}</span>
+              <button (click)="increaseQty(item)">+</button>
+            </div>
+            <div class="cart-item-total">
+              {{ (item.price * item.qty) | currency:'BRL':'symbol':'1.2-2' }}
+            </div>
+          </div>
+        </div>
+
+        <!-- Totais + pagamento -->
+        <div class="cart-footer">
+
+          <!-- Desconto -->
+          <div class="cart-row">
+            <span class="row-label">Desconto</span>
+            <div class="discount-input">
+              <input type="number" min="0" max="100"
+                     [(ngModel)]="discountPct" (change)="calcTotal()" />
+              <span>%</span>
+            </div>
+          </div>
+
+          <!-- Subtotal -->
+          <div class="cart-row">
+            <span class="row-label">Subtotal</span>
+            <span class="row-value">{{ subtotal | currency:'BRL':'symbol':'1.2-2' }}</span>
+          </div>
+
+          <!-- Desconto em R$ -->
+          <div class="cart-row" *ngIf="discountPct > 0">
+            <span class="row-label discount-label">Desconto ({{ discountPct }}%)</span>
+            <span class="row-value discount-value">− {{ discountAmount | currency:'BRL':'symbol':'1.2-2' }}</span>
+          </div>
+
+          <!-- Total -->
+          <div class="cart-total-row">
+            <span>Total</span>
+            <span class="total-value">{{ total | currency:'BRL':'symbol':'1.2-2' }}</span>
+          </div>
+
+          <!-- Formas de pagamento -->
+          <div class="payment-methods">
+            <button class="pay-btn"
+                    *ngFor="let method of paymentMethods"
+                    [class.active]="selectedPayment === method.value"
+                    (click)="selectPayment(method.value)">
+              {{ method.label }}
+            </button>
+          </div>
+
+          <!-- Finalizar -->
+          <button class="btn-checkout" (click)="finalizeSale()" [disabled]="cart.length === 0">
+            <ion-icon name="checkmark-outline"></ion-icon>
+            Finalizar venda
+          </button>
+
+          <button class="btn-cancel-sale" (click)="cancelSale()">Cancelar venda</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     MODAL — FECHAMENTO DE CAIXA
+════════════════════════════════════════ -->
+<div class="modal-overlay" *ngIf="showCloseRegisterModal" (click)="closeCloseRegisterModal()">
+  <div class="modal-box register-box" (click)="$event.stopPropagation()">
+
+    <!-- Header -->
+    <div class="modal-header register-header">
+      <div class="modal-header-left">
+        <div class="modal-icon">
+          <ion-icon name="pulse-outline"></ion-icon>
+        </div>
+        <div>
+          <div class="modal-title">Fechamento de caixa</div>
+          <div class="modal-subtitle">{{ today }} · Turno encerrado</div>
+        </div>
+      </div>
+      <button class="modal-close" (click)="closeCloseRegisterModal()">
+        <ion-icon name="close-outline"></ion-icon>
+      </button>
+    </div>
+
+    <!-- Corpo -->
+    <div class="modal-body">
+
+      <!-- Resumo do dia -->
+      <div class="form-section-title">Resumo do dia</div>
+
+      <div class="register-summary-grid">
+        <div class="summary-card">
+          <div class="summary-label">Total de vendas</div>
+          <div class="summary-value green">{{ registerStats.total | currency:'BRL':'symbol':'1.2-2' }}</div>
+          <div class="summary-sub">{{ registerStats.count }} transações</div>
+        </div>
+        <div class="summary-card">
+          <div class="summary-label">Ticket médio</div>
+          <div class="summary-value">{{ registerStats.avgTicket | currency:'BRL':'symbol':'1.2-2' }}</div>
+          <div class="summary-sub">Por venda</div>
+        </div>
+      </div>
+
+      <!-- Por forma de pagamento -->
+      <div class="form-section-title">Por forma de pagamento</div>
+
+      <div class="payment-breakdown">
+        <div class="payment-row" *ngFor="let p of registerStats.byPayment">
+          <div class="pay-icon" [ngStyle]="{'background': p.bg}">
+            <ion-icon [name]="p.icon" [ngStyle]="{'color': p.color}"></ion-icon>
+          </div>
+          <div class="pay-info">
+            <div class="pay-name">{{ p.label }}</div>
+            <div class="pay-count">{{ p.count }} transações</div>
+          </div>
+          <div class="pay-amount">
+            <div class="pay-value" [ngStyle]="{'color': p.color}">{{ p.amount | currency:'BRL':'symbol':'1.2-2' }}</div>
+            <div class="pay-pct">{{ p.pct }}%</div>
+          </div>
+          <div class="pay-bar-wrap">
+            <div class="pay-bar" [ngStyle]="{'width': p.pct + '%', 'background': p.color}"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Conferência -->
+      <div class="form-section-title">Conferência do caixa</div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Saldo inicial (R$)</label>
+          <div class="input-wrap">
+            <span class="currency-prefix">R$</span>
+            <input type="number" step="0.01" min="0" placeholder="0,00"
+                   [(ngModel)]="registerForm.opening_balance" (change)="calcRegisterDiff()" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Valor em caixa (R$)</label>
+          <div class="input-wrap">
+            <span class="currency-prefix">R$</span>
+            <input type="number" step="0.01" min="0" placeholder="0,00"
+                   [(ngModel)]="registerForm.closing_balance" (change)="calcRegisterDiff()" />
+          </div>
+        </div>
+      </div>
+
+      <!-- Diferença -->
+      <div class="register-diff" [ngClass]="registerDiffClass">
+        <div class="diff-left">
+          <ion-icon [name]="registerDiffClass === 'ok' ? 'checkmark-circle-outline' : 'warning-outline'"></ion-icon>
+          <span>Diferença calculada</span>
+        </div>
+        <span class="diff-value">{{ registerDiff | currency:'BRL':'symbol':'1.2-2' }}</span>
+      </div>
+
+      <!-- Observações -->
+      <div class="form-group full">
+        <label>Observações <span class="optional">(opcional)</span></label>
+        <textarea placeholder="Alguma observação sobre o fechamento..."
+                  [(ngModel)]="registerForm.notes" rows="3"></textarea>
+      </div>
+
+    </div>
+
+    <!-- Footer -->
+    <div class="modal-footer register-footer">
+      <button class="btn-cancel" (click)="closeCloseRegisterModal()">Cancelar</button>
+      <button class="btn-close-register" (click)="confirmCloseRegister()" [disabled]="saving">
+        <ion-icon name="checkmark-outline"></ion-icon>
+        {{ saving ? 'Processando...' : 'Confirmar fechamento' }}
+      </button>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     MODAL — BUSCAR CLIENTE
+════════════════════════════════════════ -->
+<div class="modal-overlay" *ngIf="showClientSearch" (click)="cancelClientSearch()">
+  <div class="modal-box modal-box-sm" (click)="$event.stopPropagation()">
+
+    <div class="modal-header">
+      <div class="modal-header-left">
+        <div class="modal-icon"><ion-icon name="person-outline"></ion-icon></div>
+        <div>
+          <div class="modal-title">Buscar cliente</div>
+          <div class="modal-subtitle">Selecione o cliente para esta venda</div>
+        </div>
+      </div>
+      <button class="modal-close" (click)="cancelClientSearch()">
+        <ion-icon name="close-outline"></ion-icon>
+      </button>
+    </div>
+
+    <div class="modal-body">
+      <div class="input-wrap">
+        <ion-icon name="search-outline"></ion-icon>
+        <input type="text" placeholder="Nome do cliente..."
+               [(ngModel)]="clientSearch" (input)="searchClientsInline()"
+               autofocus />
+      </div>
+
+      <div class="client-results" *ngIf="clientResults.length > 0">
+        <div class="client-result-row" *ngFor="let c of clientResults" (click)="pickClient(c)">
+          <div class="result-avatar">{{ getInitials(c.name) }}</div>
+          <div>
+            <div class="result-name">{{ c.name }}</div>
+            <div class="result-phone">{{ c.phone }}</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="no-results" *ngIf="clientSearch && clientResults.length === 0">
+        Nenhum cliente encontrado
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn-cancel" (click)="cancelClientSearch()">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     MODAL — CONFIRMAR VENDA
+════════════════════════════════════════ -->
+<div class="modal-overlay" *ngIf="showConfirmSaleModal" (click)="closeConfirmSaleModal()">
+  <div class="modal-box modal-box-sm" (click)="$event.stopPropagation()">
+
+    <div class="modal-header">
+      <div class="modal-header-left">
+        <div class="modal-icon"><ion-icon name="checkmark-circle-outline"></ion-icon></div>
+        <div>
+          <div class="modal-title">Confirmar venda</div>
+          <div class="modal-subtitle">Revise os dados antes de finalizar</div>
+        </div>
+      </div>
+      <button class="modal-close" (click)="closeConfirmSaleModal()">
+        <ion-icon name="close-outline"></ion-icon>
+      </button>
+    </div>
+
+    <div class="modal-body">
+      <div class="confirm-sale-box">
+        <div class="confirm-row">
+          <span class="confirm-label">Itens</span>
+          <span class="confirm-value">{{ cart.length }} produto(s)</span>
+        </div>
+        <div class="confirm-row" *ngIf="discountPct > 0">
+          <span class="confirm-label">Desconto</span>
+          <span class="confirm-value discount">− {{ discountAmount | currency:'BRL':'symbol':'1.2-2' }}</span>
+        </div>
+        <div class="confirm-row total-row">
+          <span class="confirm-label">Total</span>
+          <span class="confirm-total">{{ total | currency:'BRL':'symbol':'1.2-2' }}</span>
+        </div>
+        <div class="confirm-row">
+          <span class="confirm-label">Pagamento</span>
+          <span class="confirm-value">{{ paymentLabel(selectedPayment) }}</span>
+        </div>
+        <div class="confirm-row" *ngIf="selectedClient">
+          <span class="confirm-label">Cliente</span>
+          <span class="confirm-value">{{ selectedClient.name }}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn-cancel" (click)="closeConfirmSaleModal()">Voltar</button>
+      <button class="btn-save" (click)="doFinalizeSale()" [disabled]="saving">
+        <ion-icon name="checkmark-outline"></ion-icon>
+        {{ saving ? 'Processando...' : 'Confirmar venda' }}
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     MODAL — CANCELAR VENDA
+════════════════════════════════════════ -->
+<div class="modal-overlay" *ngIf="showCancelSaleModal" (click)="closeCancelSaleModal()">
+  <div class="modal-box modal-box-sm" (click)="$event.stopPropagation()">
+
+    <div class="modal-header delete-header">
+      <div class="modal-header-left">
+        <div class="modal-icon delete-icon"><ion-icon name="trash-outline"></ion-icon></div>
+        <div>
+          <div class="modal-title">Cancelar venda</div>
+          <div class="modal-subtitle">Esta ação não pode ser desfeita</div>
+        </div>
+      </div>
+      <button class="modal-close" (click)="closeCancelSaleModal()">
+        <ion-icon name="close-outline"></ion-icon>
+      </button>
+    </div>
+
+    <div class="modal-body">
+      <div class="delete-confirm-box">
+        <ion-icon name="warning-outline"></ion-icon>
+        <p>Tem certeza? Todos os <strong>{{ cart.length }} itens</strong> do carrinho serão removidos.</p>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn-cancel" (click)="closeCancelSaleModal()">Não, manter</button>
+      <button class="btn-delete-confirm" (click)="doCancelSale()">
+        <ion-icon name="trash-outline"></ion-icon>
+        Sim, cancelar
+      </button>
+    </div>
+  </div>
+</div>

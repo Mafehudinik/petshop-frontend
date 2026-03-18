@@ -1,0 +1,246 @@
+<div class="reports-layout">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <svg width="32" height="28" viewBox="0 0 130 110" fill="none">
+        <ellipse cx="42" cy="72" rx="22" ry="18" fill="none" stroke="rgba(255,255,255,0.9)" stroke-width="3"/>
+        <circle cx="42" cy="48" r="14" fill="none" stroke="rgba(255,255,255,0.9)" stroke-width="3"/>
+        <path d="M30 40 Q24 28 28 22 Q36 30 36 40" fill="none" stroke="rgba(255,255,255,0.9)" stroke-width="3" stroke-linejoin="round"/>
+        <path d="M64 66 Q76 56 74 46" fill="none" stroke="rgba(255,255,255,0.9)" stroke-width="2.5" stroke-linecap="round"/>
+        <ellipse cx="88" cy="74" rx="20" ry="16" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="2.5"/>
+        <circle cx="88" cy="52" r="12" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="2.5"/>
+        <path d="M78 44 L74 30 L84 40" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="2.5" stroke-linejoin="round"/>
+        <path d="M96 42 L100 28 L92 40" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="2.5" stroke-linejoin="round"/>
+        <path d="M65 58 C65 58 58 50 58 45 C58 41 62 38 65 42 C68 38 72 41 72 45 C72 50 65 58 65 58Z" fill="#e53935"/>
+      </svg>
+      <div class="sidebar-brand">
+        <span class="brand-name">RABICHOS</span>
+        <span class="brand-sub">Banho &amp; Tosa</span>
+      </div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <a class="nav-item" routerLink="/dashboard" routerDirection="root" routerLinkActive="active">
+        <ion-icon name="grid-outline"></ion-icon><span>Dashboard</span>
+      </a>
+      <a class="nav-item" routerLink="/clients" routerDirection="root" routerLinkActive="active">
+        <ion-icon name="people-outline"></ion-icon><span>Clientes</span>
+      </a>
+      <a class="nav-item" routerLink="/pets" routerDirection="root" routerLinkActive="active">
+        <ion-icon name="paw-outline"></ion-icon><span>Pets</span>
+      </a>
+      <a class="nav-item" routerLink="/appointments" routerDirection="root" routerLinkActive="active">
+        <ion-icon name="calendar-outline"></ion-icon><span>Agenda</span>
+      </a>
+      <a class="nav-item" routerLink="/hotel" routerDirection="root" routerLinkActive="active">
+        <ion-icon name="home-outline"></ion-icon><span>Hotel</span>
+      </a>
+      <a class="nav-item" routerLink="/sales" routerDirection="root" routerLinkActive="active">
+        <ion-icon name="cash-outline"></ion-icon><span>Vendas (PDV)</span>
+      </a>
+      <a class="nav-item" routerLink="/products" routerDirection="root" routerLinkActive="active">
+        <ion-icon name="cube-outline"></ion-icon><span>Estoque</span>
+      </a>
+      <a class="nav-item" routerLink="/services" routerDirection="root" routerLinkActive="active">
+        <ion-icon name="cut-outline"></ion-icon><span>Serviços</span>
+      </a>
+      <a class="nav-item" routerLink="/reports" routerDirection="root" routerLinkActive="active">
+        <ion-icon name="bar-chart-outline"></ion-icon><span>Relatórios</span>
+      </a>
+      <a class="nav-item" routerLink="/whatsapp" routerDirection="root" routerLinkActive="active">
+        <ion-icon name="logo-whatsapp"></ion-icon><span>WhatsApp</span>
+      </a>
+    </nav>
+
+    <div class="sidebar-user">
+      <div class="user-avatar">{{ userInitials }}</div>
+      <div class="user-info">
+        <span class="user-name">{{ currentUser?.name || 'Admin' }}</span>
+        <span class="user-role">{{ currentUser?.role || 'Administrador' }}</span>
+      </div>
+    </div>
+  </aside>
+
+  <!-- CONTEÚDO -->
+  <div class="main-content">
+
+    <!-- Topbar -->
+    <div class="topbar">
+      <div class="topbar-left">
+        <div class="page-title">Relatórios e análises</div>
+        <div class="page-subtitle">Visualize o desempenho do seu pet shop</div>
+      </div>
+    </div>
+
+    <!-- Filtros -->
+    <div class="filter-bar">
+      <div class="filter-group">
+        <label>Data inicial:</label>
+        <input type="date" [(ngModel)]="startDate" />
+      </div>
+      <div class="filter-group">
+        <label>Data final:</label>
+        <input type="date" [(ngModel)]="endDate" />
+      </div>
+      <button class="btn-apply" (click)="applyFilters()">
+        <ion-icon name="funnel-outline"></ion-icon>
+        Aplicar filtros
+      </button>
+    </div>
+
+    <!-- Tabs -->
+    <div class="tabs">
+      <button class="tab" [class.active]="activeTab === 'sales'" (click)="changeTab('sales')">
+        <ion-icon name="cash-outline"></ion-icon>
+        Vendas
+      </button>
+      <button class="tab" [class.active]="activeTab === 'services'" (click)="changeTab('services')">
+        <ion-icon name="cut-outline"></ion-icon>
+        Serviços
+      </button>
+      <button class="tab" [class.active]="activeTab === 'clients'" (click)="changeTab('clients')">
+        <ion-icon name="people-outline"></ion-icon>
+        Clientes
+      </button>
+      <button class="tab" [class.active]="activeTab === 'hotel'" (click)="changeTab('hotel')">
+        <ion-icon name="home-outline"></ion-icon>
+        Hotel
+      </button>
+    </div>
+
+    <!-- Conteúdo dos relatórios -->
+    <div class="reports-content">
+
+      <!-- Relatório de Vendas -->
+      <div class="report-section" *ngIf="activeTab === 'sales'">
+        <div class="summary-cards">
+          <div class="summary-card">
+            <div class="card-icon">
+              <ion-icon name="cash-outline"></ion-icon>
+            </div>
+            <div class="card-info">
+              <div class="card-label">Faturamento Total</div>
+              <div class="card-value">R$ {{ getTotalRevenue().toFixed(2) }}</div>
+            </div>
+          </div>
+          <div class="summary-card">
+            <div class="card-icon">
+              <ion-icon name="cart-outline"></ion-icon>
+            </div>
+            <div class="card-info">
+              <div class="card-label">Total de Vendas</div>
+              <div class="card-value">{{ getTotalSales() }}</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="report-card">
+          <h3>Produtos mais vendidos</h3>
+          <div class="table-wrapper">
+            <table>
+              <thead>
+                <tr>
+                  <th>Produto</th>
+                  <th>Quantidade</th>
+                  <th>Faturamento</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let product of topProducts">
+                  <td>{{ product.name }}</td>
+                  <td>{{ product.total_sold }}</td>
+                  <td>R$ {{ product.revenue?.toFixed(2) }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Relatório de Serviços -->
+      <div class="report-section" *ngIf="activeTab === 'services'">
+        <div class="report-card">
+          <h3>Serviços mais agendados</h3>
+          <div class="table-wrapper">
+            <table>
+              <thead>
+                <tr>
+                  <th>Serviço</th>
+                  <th>Agendamentos</th>
+                  <th>Faturamento</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let service of topServices">
+                  <td>{{ service.name }}</td>
+                  <td>{{ service.total_appointments }}</td>
+                  <td>R$ {{ service.revenue?.toFixed(2) }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Relatório de Clientes -->
+      <div class="report-section" *ngIf="activeTab === 'clients'">
+        <div class="report-card">
+          <h3>Clientes mais frequentes</h3>
+          <div class="table-wrapper">
+            <table>
+              <thead>
+                <tr>
+                  <th>Cliente</th>
+                  <th>Telefone</th>
+                  <th>Agendamentos</th>
+                  <th>Compras</th>
+                  <th>Total gasto</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let client of topClients">
+                  <td>{{ client.name }}</td>
+                  <td>{{ client.phone }}</td>
+                  <td>{{ client.total_appointments }}</td>
+                  <td>{{ client.total_purchases }}</td>
+                  <td>R$ {{ client.total_spent?.toFixed(2) }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Relatório de Hotel -->
+      <div class="report-section" *ngIf="activeTab === 'hotel'">
+        <div class="report-card">
+          <h3>Hospedagens por período</h3>
+          <div class="table-wrapper">
+            <table>
+              <thead>
+                <tr>
+                  <th>Data</th>
+                  <th>Check-ins</th>
+                  <th>Faturamento</th>
+                  <th>Diária média</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let hotel of hotelReport">
+                  <td>{{ hotel.date }}</td>
+                  <td>{{ hotel.total_checkins }}</td>
+                  <td>R$ {{ hotel.revenue?.toFixed(2) }}</td>
+                  <td>R$ {{ hotel.avg_daily_rate?.toFixed(2) }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+</div>

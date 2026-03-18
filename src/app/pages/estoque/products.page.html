@@ -1,0 +1,446 @@
+<div class="products-layout">
+
+  <!-- ═══════════════════════════════════════
+       SIDEBAR
+  ════════════════════════════════════════ -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <svg width="32" height="28" viewBox="0 0 130 110" fill="none">
+        <ellipse cx="42" cy="72" rx="22" ry="18" fill="none" stroke="rgba(255,255,255,0.9)" stroke-width="3"/>
+        <circle cx="42" cy="48" r="14" fill="none" stroke="rgba(255,255,255,0.9)" stroke-width="3"/>
+        <path d="M30 40 Q24 28 28 22 Q36 30 36 40" fill="none" stroke="rgba(255,255,255,0.9)" stroke-width="3" stroke-linejoin="round"/>
+        <path d="M64 66 Q76 56 74 46" fill="none" stroke="rgba(255,255,255,0.9)" stroke-width="2.5" stroke-linecap="round"/>
+        <ellipse cx="88" cy="74" rx="20" ry="16" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="2.5"/>
+        <circle cx="88" cy="52" r="12" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="2.5"/>
+        <path d="M78 44 L74 30 L84 40" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="2.5" stroke-linejoin="round"/>
+        <path d="M96 42 L100 28 L92 40" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="2.5" stroke-linejoin="round"/>
+        <path d="M65 58 C65 58 58 50 58 45 C58 41 62 38 65 42 C68 38 72 41 72 45 C72 50 65 58 65 58Z" fill="#e53935"/>
+      </svg>
+      <div class="sidebar-brand">
+        <span class="brand-name">RABICHOS</span>
+        <span class="brand-sub">Banho &amp; Tosa</span>
+      </div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <a class="nav-item" routerLink="/dashboard" routerDirection="root" routerLinkActive="active">
+        <ion-icon name="grid-outline"></ion-icon><span>Dashboard</span>
+      </a>
+      <a class="nav-item" routerLink="/clients" routerDirection="root" routerLinkActive="active">
+        <ion-icon name="people-outline"></ion-icon><span>Clientes</span>
+      </a>
+      <a class="nav-item" routerLink="/pets" routerDirection="root" routerLinkActive="active">
+        <ion-icon name="paw-outline"></ion-icon><span>Pets</span>
+      </a>
+      <a class="nav-item" routerLink="/appointments" routerDirection="root" routerLinkActive="active">
+        <ion-icon name="calendar-outline"></ion-icon><span>Agenda</span>
+      </a>
+      <a class="nav-item" routerLink="/hotel" routerDirection="root" routerLinkActive="active">
+        <ion-icon name="home-outline"></ion-icon><span>Hotel</span>
+      </a>
+      <a class="nav-item" routerLink="/sales" routerDirection="root" routerLinkActive="active">
+        <ion-icon name="cash-outline"></ion-icon><span>Vendas (PDV)</span>
+      </a>
+      <a class="nav-item" routerLink="/products" routerDirection="root" routerLinkActive="active">
+        <ion-icon name="cube-outline"></ion-icon><span>Estoque</span>
+      </a>
+      <a class="nav-item" routerLink="/services" routerDirection="root" routerLinkActive="active">
+        <ion-icon name="cut-outline"></ion-icon><span>Serviços</span>
+      </a>
+      <a class="nav-item" routerLink="/reports" routerDirection="root" routerLinkActive="active">
+        <ion-icon name="bar-chart-outline"></ion-icon><span>Relatórios</span>
+      </a>
+      <a class="nav-item" routerLink="/whatsapp" routerDirection="root" routerLinkActive="active">
+        <ion-icon name="logo-whatsapp"></ion-icon><span>WhatsApp</span>
+      </a>
+    </nav>
+
+    <div class="sidebar-user">
+      <div class="user-avatar">{{ userInitials }}</div>
+      <div class="user-info">
+        <span class="user-name">{{ currentUser?.name || 'Admin' }}</span>
+        <span class="user-role">{{ currentUser?.role || 'Administrador' }}</span>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ═══════════════════════════════════════
+       CONTEÚDO
+  ════════════════════════════════════════ -->
+  <div class="main-content">
+
+    <!-- Topbar -->
+    <div class="topbar">
+      <div class="topbar-left">
+        <div class="page-title">Estoque</div>
+        <div class="page-subtitle">Controle de produtos e alertas de reposição</div>
+      </div>
+      <div class="topbar-actions">
+        <button class="btn-secondary" (click)="exportCSV()">
+          <ion-icon name="share-outline"></ion-icon>
+          Exportar
+        </button>
+        <button class="btn-primary" (click)="openProductModal()">
+          <ion-icon name="add-outline"></ion-icon>
+          Novo produto
+        </button>
+      </div>
+    </div>
+
+    <!-- KPIs -->
+    <div class="kpi-bar">
+      <div class="kpi-card">
+        <div class="kpi-label">Total de produtos</div>
+        <div class="kpi-value">{{ stats.total }}</div>
+        <div class="kpi-sub ok">{{ stats.categories }} categorias</div>
+      </div>
+      <div class="kpi-card critical-card">
+        <div class="kpi-label">Alertas críticos</div>
+        <div class="kpi-value critical">{{ stats.critical }}</div>
+        <div class="kpi-sub critical">Estoque zerado ou ≤ 2</div>
+      </div>
+      <div class="kpi-card low-card">
+        <div class="kpi-label">Estoque baixo</div>
+        <div class="kpi-value low">{{ stats.low }}</div>
+        <div class="kpi-sub low">Reposição recomendada</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Valor em estoque</div>
+        <div class="kpi-value">{{ stats.totalValue | currency:'BRL':'symbol':'1.2-2' }}</div>
+        <div class="kpi-sub ok">Custo total</div>
+      </div>
+    </div>
+
+    <!-- Filtros -->
+    <div class="filter-bar">
+      <div class="search-box">
+        <ion-icon name="search-outline"></ion-icon>
+        <input type="text" placeholder="Buscar produto..."
+               [(ngModel)]="searchTerm" (input)="applyFilters()" />
+      </div>
+      <div class="stock-filters">
+        <button class="filter-btn"
+                *ngFor="let f of stockFilters"
+                [class.active]="selectedStockFilter === f.value"
+                [ngClass]="f.style"
+                (click)="setStockFilter(f.value)">
+          {{ f.label }}
+        </button>
+      </div>
+      <select class="category-select" [(ngModel)]="selectedCategory" (change)="applyFilters()">
+        <option value="">Todas categorias</option>
+        <option *ngFor="let cat of categories" [value]="cat.value">{{ cat.label }}</option>
+      </select>
+    </div>
+
+    <!-- Tabela -->
+    <div class="table-wrap">
+      <div class="loading-state" *ngIf="loading">
+        <ion-spinner name="crescent"></ion-spinner>
+        <p>Carregando produtos...</p>
+      </div>
+
+      <table class="products-table" *ngIf="!loading">
+        <thead>
+          <tr>
+            <th (click)="sort('name')" class="sortable">
+              Produto <ion-icon [name]="sortIcon('name')"></ion-icon>
+            </th>
+            <th>Categoria</th>
+            <th class="center" (click)="sort('stock')" style="cursor:pointer;">
+              Estoque <ion-icon [name]="sortIcon('stock')"></ion-icon>
+            </th>
+            <th class="center">Mínimo</th>
+            <th class="right" (click)="sort('cost_price')" style="cursor:pointer;">
+              Custo unit. <ion-icon [name]="sortIcon('cost_price')"></ion-icon>
+            </th>
+            <th class="right" (click)="sort('sale_price')" style="cursor:pointer;">
+              Preço venda <ion-icon [name]="sortIcon('sale_price')"></ion-icon>
+            </th>
+            <th class="center">Status</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let product of paginatedProducts"
+              [ngClass]="rowClass(product)"
+              (click)="viewProduct(product)">
+            <td>
+              <div class="product-cell">
+                <div class="product-icon" [ngStyle]="getCategoryStyle(product.category)">
+                  <ion-icon [name]="getCategoryIcon(product.category)"></ion-icon>
+                </div>
+                <div>
+                  <div class="product-name">{{ product.name }}</div>
+                  <div class="product-ref">{{ product.reference }}</div>
+                </div>
+              </div>
+            </td>
+            <td>
+              <span class="category-badge" [ngClass]="product.category">
+                {{ categoryLabel(product.category) }}
+              </span>
+            </td>
+            <td class="center">
+              <span class="stock-value" [ngClass]="stockClass(product)">
+                {{ product.is_service ? '—' : product.stock }}
+              </span>
+            </td>
+            <td class="center">
+              <span class="muted">{{ product.is_service ? '—' : product.min_stock }}</span>
+            </td>
+            <td class="right">
+              <span class="muted">{{ product.is_service ? '—' : (product.cost_price | currency:'BRL':'symbol':'1.2-2') }}</span>
+            </td>
+            <td class="right">
+              <span class="sale-price">{{ product.sale_price | currency:'BRL':'symbol':'1.2-2' }}</span>
+            </td>
+            <td class="center">
+              <span class="status-badge" [ngClass]="stockClass(product)">
+                {{ stockLabel(product) }}
+              </span>
+            </td>
+            <td class="action-col" (click)="$event.stopPropagation()">
+              <button class="restock-btn"
+                      *ngIf="!product.is_service && stockClass(product) !== 'normal'"
+                      (click)="openRestockModal(product)">Repor</button>
+              <button class="edit-btn"
+                      *ngIf="product.is_service || stockClass(product) === 'normal'"
+                      (click)="openProductModal(product)">Editar</button>
+            </td>
+          </tr>
+
+          <tr *ngIf="filteredProducts.length === 0 && !loading">
+            <td colspan="8">
+              <div class="empty-state">
+                <ion-icon name="cube-outline"></ion-icon>
+                <h3>Nenhum produto encontrado</h3>
+                <p>{{ searchTerm ? 'Tente outro termo.' : 'Cadastre o primeiro produto.' }}</p>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Paginação -->
+    <div class="pagination" *ngIf="!loading && filteredProducts.length > pageSize">
+      <span class="pagination-info">
+        Mostrando {{ pageStart }}–{{ pageEnd }} de {{ filteredProducts.length }} produtos
+      </span>
+      <div class="pagination-pages">
+        <button class="page-btn" *ngFor="let p of pages"
+                [class.active]="p === currentPage"
+                (click)="goToPage(p)">{{ p }}</button>
+        <button class="page-btn" (click)="goToPage(currentPage + 1)"
+                [disabled]="currentPage === totalPages">→</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     MODAL — NOVO / EDITAR PRODUTO
+════════════════════════════════════════ -->
+<div class="modal-overlay" *ngIf="showProductModal" (click)="closeProductModal()">
+  <div class="modal-box" (click)="$event.stopPropagation()">
+
+    <div class="modal-header">
+      <div class="modal-header-left">
+        <div class="modal-icon">
+          <ion-icon name="cube-outline"></ion-icon>
+        </div>
+        <div>
+          <div class="modal-title">{{ isEditing ? 'Editar produto' : 'Novo produto' }}</div>
+          <div class="modal-subtitle">Preencha os dados do produto</div>
+        </div>
+      </div>
+      <button class="modal-close" (click)="closeProductModal()">
+        <ion-icon name="close-outline"></ion-icon>
+      </button>
+    </div>
+
+    <div class="modal-body">
+
+      <!-- Identificação -->
+      <div class="form-section-title">Identificação</div>
+
+      <div class="form-row name-ref-row">
+        <div class="form-group">
+          <label>Nome <span class="required">*</span></label>
+          <div class="input-wrap" [class.error]="formErrors.name">
+            <ion-icon name="cube-outline"></ion-icon>
+            <input type="text" placeholder="Ex: Ração Premium 15kg"
+                   [(ngModel)]="form.name" (blur)="validateField('name')" />
+          </div>
+          <span class="field-error" *ngIf="formErrors.name">{{ formErrors.name }}</span>
+        </div>
+        <div class="form-group ref-group">
+          <label>Referência</label>
+          <div class="input-wrap">
+            <input type="text" placeholder="REF-001" [(ngModel)]="form.reference" />
+          </div>
+        </div>
+      </div>
+
+      <!-- Categoria -->
+      <div class="form-group full">
+        <label>Categoria <span class="required">*</span></label>
+        <div class="category-grid">
+          <div class="cat-option"
+               *ngFor="let cat of categories"
+               [class.active]="form.category === cat.value"
+               (click)="form.category = cat.value; formErrors.category = ''">
+            <ion-icon [name]="getCategoryIcon(cat.value)"
+                      [ngStyle]="{'color': form.category === cat.value ? getCategoryColor(cat.value) : '#888'}">
+            </ion-icon>
+            <span>{{ cat.label }}</span>
+          </div>
+        </div>
+        <span class="field-error" *ngIf="formErrors.category">{{ formErrors.category }}</span>
+      </div>
+
+      <!-- Estoque -->
+      <div class="form-section-title">Estoque</div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Quantidade inicial</label>
+          <div class="input-wrap">
+            <ion-icon name="layers-outline"></ion-icon>
+            <input type="number" min="0" placeholder="0"
+                   [(ngModel)]="form.stock" [disabled]="isEditing" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Estoque mínimo</label>
+          <div class="input-wrap">
+            <ion-icon name="alert-circle-outline"></ion-icon>
+            <input type="number" min="0" placeholder="5" [(ngModel)]="form.min_stock" />
+          </div>
+        </div>
+      </div>
+
+      <!-- Preços -->
+      <div class="form-section-title" *ngIf="form.category !== 'service'">Preços</div>
+
+      <div class="form-row" *ngIf="form.category !== 'service'">
+        <div class="form-group">
+          <label>Custo unitário (R$)</label>
+          <div class="input-wrap">
+            <span class="currency-prefix">R$</span>
+            <input type="number" step="0.01" min="0" placeholder="0,00"
+                   [(ngModel)]="form.cost_price" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Preço venda (R$) <span class="required">*</span></label>
+          <div class="input-wrap" [class.error]="formErrors.sale_price">
+            <span class="currency-prefix">R$</span>
+            <input type="number" step="0.01" min="0" placeholder="0,00"
+                   [(ngModel)]="form.sale_price" (blur)="validateField('sale_price')" />
+          </div>
+          <span class="field-error" *ngIf="formErrors.sale_price">{{ formErrors.sale_price }}</span>
+        </div>
+      </div>
+
+      <!-- Preço de serviço -->
+      <div class="form-group full" *ngIf="form.category === 'service'">
+        <label>Preço do serviço (R$) <span class="required">*</span></label>
+        <div class="input-wrap" [class.error]="formErrors.sale_price">
+          <span class="currency-prefix">R$</span>
+          <input type="number" step="0.01" min="0" placeholder="0,00"
+                 [(ngModel)]="form.sale_price" (blur)="validateField('sale_price')" />
+        </div>
+        <span class="field-error" *ngIf="formErrors.sale_price">{{ formErrors.sale_price }}</span>
+      </div>
+
+    </div>
+
+    <div class="modal-footer">
+      <span class="required-note">* campos obrigatórios</span>
+      <div class="modal-actions">
+        <button class="btn-cancel" (click)="closeProductModal()">Cancelar</button>
+        <button class="btn-save" (click)="saveProduct()" [disabled]="saving">
+          <ion-icon name="checkmark-outline"></ion-icon>
+          {{ saving ? 'Salvando...' : (isEditing ? 'Atualizar' : 'Salvar produto') }}
+        </button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     MODAL — REPOR ESTOQUE
+════════════════════════════════════════ -->
+<div class="modal-overlay" *ngIf="showRestockModal" (click)="closeRestockModal()">
+  <div class="modal-box modal-box-sm" (click)="$event.stopPropagation()">
+
+    <div class="modal-header restock-header">
+      <div class="modal-header-left">
+        <div class="modal-icon">
+          <ion-icon name="arrow-up-circle-outline"></ion-icon>
+        </div>
+        <div>
+          <div class="modal-title">Repor estoque</div>
+          <div class="modal-subtitle">{{ restockProduct?.name }}</div>
+        </div>
+      </div>
+      <button class="modal-close" (click)="closeRestockModal()">
+        <ion-icon name="close-outline"></ion-icon>
+      </button>
+    </div>
+
+    <div class="modal-body" *ngIf="restockProduct">
+
+      <!-- Estoque atual -->
+      <div class="stock-status-box critical" *ngIf="stockClass(restockProduct) === 'critical'">
+        <span>Estoque atual</span>
+        <span class="stock-number">{{ restockProduct.stock }} un</span>
+      </div>
+      <div class="stock-status-box low" *ngIf="stockClass(restockProduct) === 'low'">
+        <span>Estoque atual</span>
+        <span class="stock-number">{{ restockProduct.stock }} un</span>
+      </div>
+
+      <!-- Quantidade -->
+      <div class="form-group full">
+        <label>Quantidade a adicionar <span class="required">*</span></label>
+        <div class="qty-control-large">
+          <button class="qty-btn" (click)="decreaseRestockQty()">−</button>
+          <input type="number" min="1" [(ngModel)]="restockQty" (change)="validateRestockQty()" />
+          <button class="qty-btn" (click)="increaseRestockQty()">+</button>
+        </div>
+        <span class="field-error" *ngIf="restockError">{{ restockError }}</span>
+      </div>
+
+      <!-- Novo total -->
+      <div class="stock-status-box success">
+        <span>Novo total</span>
+        <span class="stock-number">{{ (restockProduct.stock || 0) + (restockQty || 0) }} un</span>
+      </div>
+
+      <!-- Observação -->
+      <div class="form-group full">
+        <label>Observação <span class="optional">(opcional)</span></label>
+        <div class="input-wrap">
+          <ion-icon name="document-text-outline"></ion-icon>
+          <input type="text" placeholder="Ex: Nota fiscal 1234..."
+                 [(ngModel)]="restockNote" />
+        </div>
+      </div>
+
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn-cancel" (click)="closeRestockModal()">Cancelar</button>
+      <button class="btn-restock" (click)="confirmRestock()" [disabled]="saving">
+        <ion-icon name="checkmark-outline"></ion-icon>
+        {{ saving ? 'Salvando...' : 'Confirmar reposição' }}
+      </button>
+    </div>
+
+  </div>
+</div>

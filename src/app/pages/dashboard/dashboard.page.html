@@ -1,0 +1,241 @@
+<div class="dashboard-layout">
+
+  <!-- ═══════════════════════════════════════
+       SIDEBAR
+  ════════════════════════════════════════ -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <svg width="32" height="28" viewBox="0 0 130 110" fill="none">
+        <ellipse cx="42" cy="72" rx="22" ry="18" fill="none" stroke="rgba(255,255,255,0.9)" stroke-width="3"/>
+        <circle cx="42" cy="48" r="14" fill="none" stroke="rgba(255,255,255,0.9)" stroke-width="3"/>
+        <path d="M30 40 Q24 28 28 22 Q36 30 36 40" fill="none" stroke="rgba(255,255,255,0.9)" stroke-width="3" stroke-linejoin="round"/>
+        <path d="M64 66 Q76 56 74 46" fill="none" stroke="rgba(255,255,255,0.9)" stroke-width="2.5" stroke-linecap="round"/>
+        <ellipse cx="88" cy="74" rx="20" ry="16" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="2.5"/>
+        <circle cx="88" cy="52" r="12" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="2.5"/>
+        <path d="M78 44 L74 30 L84 40" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="2.5" stroke-linejoin="round"/>
+        <path d="M96 42 L100 28 L92 40" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="2.5" stroke-linejoin="round"/>
+        <path d="M65 58 C65 58 58 50 58 45 C58 41 62 38 65 42 C68 38 72 41 72 45 C72 50 65 58 65 58Z" fill="#e53935"/>
+      </svg>
+      <div class="sidebar-brand">
+        <span class="brand-name">RABICHOS</span>
+        <span class="brand-sub">Banho &amp; Tosa</span>
+      </div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <a class="nav-item" routerLink="/dashboard" routerDirection="root" routerLinkActive="active">
+        <ion-icon name="grid-outline"></ion-icon><span>Dashboard</span>
+      </a>
+      <a class="nav-item" routerLink="/clients" routerDirection="root" routerLinkActive="active">
+        <ion-icon name="people-outline"></ion-icon><span>Clientes</span>
+      </a>
+      <a class="nav-item" routerLink="/pets" routerDirection="root" routerLinkActive="active">
+        <ion-icon name="paw-outline"></ion-icon><span>Pets</span>
+      </a>
+      <a class="nav-item" routerLink="/appointments" routerDirection="root" routerLinkActive="active">
+        <ion-icon name="calendar-outline"></ion-icon><span>Agenda</span>
+      </a>
+      <a class="nav-item" routerLink="/hotel" routerDirection="root" routerLinkActive="active">
+        <ion-icon name="home-outline"></ion-icon><span>Hotel</span>
+      </a>
+      <a class="nav-item" routerLink="/sales" routerDirection="root" routerLinkActive="active">
+        <ion-icon name="cash-outline"></ion-icon><span>Vendas (PDV)</span>
+      </a>
+      <a class="nav-item" routerLink="/products" routerDirection="root" routerLinkActive="active">
+        <ion-icon name="cube-outline"></ion-icon><span>Estoque</span>
+      </a>
+      <a class="nav-item" routerLink="/services" routerDirection="root" routerLinkActive="active">
+        <ion-icon name="cut-outline"></ion-icon><span>Serviços</span>
+      </a>
+      <a class="nav-item" routerLink="/reports" routerDirection="root" routerLinkActive="active">
+        <ion-icon name="bar-chart-outline"></ion-icon><span>Relatórios</span>
+      </a>
+      <a class="nav-item" routerLink="/whatsapp" routerDirection="root" routerLinkActive="active">
+        <ion-icon name="logo-whatsapp"></ion-icon><span>WhatsApp</span>
+      </a>
+    </nav>
+
+    <div class="sidebar-user">
+      <div class="user-avatar">{{ userInitials }}</div>
+      <div class="user-info">
+        <span class="user-name">{{ currentUser?.name || 'Admin' }}</span>
+        <span class="user-role">{{ currentUser?.role || 'Administrador' }}</span>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ═══════════════════════════════════════
+       CONTEÚDO PRINCIPAL
+  ════════════════════════════════════════ -->
+  <main class="main-content">
+
+    <!-- Topbar -->
+    <div class="topbar">
+      <div class="topbar-left">
+        <h1 class="page-title">Dashboard</h1>
+        <p class="page-date">{{ today }}</p>
+      </div>
+      <div class="topbar-right">
+        <button class="topbar-btn" (click)="loadDashboard()">
+          <ion-icon name="search-outline"></ion-icon>
+          <span>Buscar...</span>
+        </button>
+        <button class="topbar-btn icon-only" (click)="loadDashboard()">
+          <ion-icon name="notifications-outline"></ion-icon>
+          <span class="notif-badge">3</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- ── KPI Cards ── -->
+    <div class="kpi-grid">
+
+      <div class="kpi-card">
+        <div class="kpi-top">
+          <span class="kpi-label">Faturamento do dia</span>
+          <div class="kpi-icon green">
+            <ion-icon name="cash-outline"></ion-icon>
+          </div>
+        </div>
+        <div class="kpi-value">R$ {{ stats.todayRevenue?.revenue || 0 }}</div>
+        <div class="kpi-trend green">+12% vs ontem</div>
+      </div>
+
+      <div class="kpi-card">
+        <div class="kpi-top">
+          <span class="kpi-label">Atendimentos hoje</span>
+          <div class="kpi-icon blue">
+            <ion-icon name="calendar-outline"></ion-icon>
+          </div>
+        </div>
+        <div class="kpi-value">{{ stats.todayAppointments?.count || 0 }}</div>
+        <div class="kpi-trend neutral">
+          {{ stats.todayAppointments?.completed || 0 }} concluídos ·
+          {{ stats.todayAppointments?.pending || 0 }} pendentes
+        </div>
+      </div>
+
+      <div class="kpi-card">
+        <div class="kpi-top">
+          <span class="kpi-label">Pets no hotel</span>
+          <div class="kpi-icon amber">
+            <ion-icon name="home-outline"></ion-icon>
+          </div>
+        </div>
+        <div class="kpi-value">{{ stats.activeHotel?.count || 0 }}</div>
+        <div class="kpi-trend neutral">2 check-out amanhã</div>
+      </div>
+
+      <div class="kpi-card">
+        <div class="kpi-top">
+          <span class="kpi-label">Alerta de estoque</span>
+          <div class="kpi-icon red">
+            <ion-icon name="alert-circle-outline"></ion-icon>
+          </div>
+        </div>
+        <div class="kpi-value red-value">{{ stats.lowStock?.count || 0 }}</div>
+        <div class="kpi-trend red">produtos em falta</div>
+      </div>
+
+    </div>
+
+    <!-- ── Gráfico + Serviços ── -->
+    <div class="mid-grid">
+
+      <!-- Faturamento semanal -->
+      <div class="card chart-card">
+        <div class="card-header">
+          <span class="card-title">Faturamento semanal</span>
+        </div>
+        <div class="bar-chart">
+          <div class="bar-group" *ngFor="let day of weekData">
+            <div class="bar" [style.height.px]="day.height" [class.active]="day.active"></div>
+            <span class="bar-label" [class.active]="day.active">{{ day.label }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Serviços do dia -->
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">Serviços do dia</span>
+        </div>
+        <div class="services-list">
+          <div class="service-row" *ngFor="let s of dailyServices">
+            <div class="service-dot" [style.background]="s.color"></div>
+            <span class="service-name">{{ s.name }}</span>
+            <span class="service-count">{{ s.count }}</span>
+          </div>
+          <div class="service-row" *ngIf="dailyServices.length === 0">
+            <span class="empty-text">Nenhum serviço hoje</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ── Agenda + Hotel ── -->
+    <div class="bottom-grid">
+
+      <!-- Agenda do dia -->
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">Agenda de hoje</span>
+          <a class="see-all"
+             routerLink="/appointments"
+             routerDirection="root">Ver todos</a>
+        </div>
+
+        <div class="appt-list" *ngIf="todayAppointments.length > 0">
+          <div class="appt-item"
+               *ngFor="let a of todayAppointments"
+               [ngClass]="a.status">
+            <div class="appt-time">{{ a.appointment_time }}</div>
+            <div class="appt-body">
+              <div class="appt-pet">{{ a.pet_name }} · {{ a.service_name }}</div>
+              <div class="appt-client">{{ a.client_name }} · {{ a.employee_name }}</div>
+            </div>
+            <div class="appt-badge" [ngClass]="a.status">
+              {{ statusLabel(a.status) }}
+            </div>
+          </div>
+        </div>
+
+        <div class="empty-state" *ngIf="todayAppointments.length === 0">
+          <ion-icon name="calendar-outline"></ion-icon>
+          <p>Nenhum agendamento para hoje</p>
+        </div>
+      </div>
+
+      <!-- Hotel -->
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">Hotel — hospedados</span>
+          <a class="see-all"
+             routerLink="/hotel"
+             routerDirection="root">Ver todos</a>
+        </div>
+
+        <div class="hotel-list" *ngIf="hotelPets.length > 0">
+          <div class="hotel-item" *ngFor="let h of hotelPets">
+            <div class="hotel-avatar" [ngClass]="h.urgency">
+              <ion-icon name="paw-outline"></ion-icon>
+            </div>
+            <div class="hotel-body">
+              <div class="hotel-pet">{{ h.pet_name }}</div>
+              <div class="hotel-checkout">Check-out: {{ h.checkout_date }}</div>
+            </div>
+            <div class="hotel-badge" [ngClass]="h.urgency">{{ h.urgencyLabel }}</div>
+          </div>
+        </div>
+
+        <div class="empty-state" *ngIf="hotelPets.length === 0">
+          <ion-icon name="home-outline"></ion-icon>
+          <p>Nenhum pet hospedado</p>
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+</div>

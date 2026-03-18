@@ -1,0 +1,101 @@
+<ion-content>
+  <div class="login-wrapper">
+
+    <!-- Painel esquerdo - identidade visual -->
+    <div class="login-left">
+      <div class="bg-circle circle-top"></div>
+      <div class="bg-circle circle-bottom"></div>
+
+      <svg class="brand-logo" width="130" height="110" viewBox="0 0 130 110" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- Cachorro -->
+        <ellipse cx="42" cy="72" rx="22" ry="18" fill="none" stroke="rgba(255,255,255,0.85)" stroke-width="2.2"/>
+        <circle cx="42" cy="48" r="14" fill="none" stroke="rgba(255,255,255,0.85)" stroke-width="2.2"/>
+        <path d="M30 40 Q24 28 28 22 Q36 30 36 40" fill="none" stroke="rgba(255,255,255,0.85)" stroke-width="2.2" stroke-linejoin="round"/>
+        <path d="M64 66 Q76 56 74 46" fill="none" stroke="rgba(255,255,255,0.85)" stroke-width="2.2" stroke-linecap="round"/>
+        <!-- Gato -->
+        <ellipse cx="88" cy="74" rx="20" ry="16" fill="none" stroke="rgba(255,255,255,0.75)" stroke-width="2"/>
+        <circle cx="88" cy="52" r="12" fill="none" stroke="rgba(255,255,255,0.75)" stroke-width="2"/>
+        <path d="M78 44 L74 30 L84 40" fill="none" stroke="rgba(255,255,255,0.75)" stroke-width="2" stroke-linejoin="round"/>
+        <path d="M96 42 L100 28 L92 40" fill="none" stroke="rgba(255,255,255,0.75)" stroke-width="2" stroke-linejoin="round"/>
+        <path d="M108 74 Q120 64 116 50 Q112 40 118 32" fill="none" stroke="rgba(255,255,255,0.75)" stroke-width="2" stroke-linecap="round"/>
+        <!-- Coração -->
+        <path d="M65 58 C65 58 58 50 58 45 C58 41 62 38 65 42 C68 38 72 41 72 45 C72 50 65 58 65 58Z" fill="#e53935"/>
+      </svg>
+
+      <div class="brand-name">RABICHOS</div>
+      <div class="brand-subtitle">Banho &amp; Tosa</div>
+      <div class="brand-divider"></div>
+      <p class="brand-tagline">Cuidando com amor e carinho dos seus melhores amigos</p>
+      <span class="brand-city">Bebedouro · SP</span>
+    </div>
+
+    <!-- Painel direito - formulário -->
+    <div class="login-right">
+      <div class="form-header">
+        <h1>Bem-vindo de volta!</h1>
+        <p>Acesse o sistema Rabichos</p>
+      </div>
+
+      <form (ngSubmit)="login()">
+
+        <div class="field-group">
+          <label>Usuário</label>
+          <div class="field-input">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2e7d4f" stroke-width="2" stroke-linecap="round">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+            </svg>
+            <ion-input
+              type="email"
+              [(ngModel)]="email"
+              name="email"
+              placeholder="Digite seu usuário"
+              required>
+            </ion-input>
+          </div>
+        </div>
+
+        <div class="field-group">
+          <label>Senha</label>
+          <div class="field-input">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2e7d4f" stroke-width="2" stroke-linecap="round">
+              <rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+            </svg>
+            <ion-input
+              type="password"
+              [(ngModel)]="password"
+              name="password"
+              placeholder="••••••••"
+              required>
+            </ion-input>
+          </div>
+          <div class="forgot-password">
+            <span>Esqueceu a senha?</span>
+          </div>
+        </div>
+
+        <ion-button expand="block" type="submit" class="login-button">
+          <svg slot="start" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round">
+            <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/>
+            <polyline points="10 17 15 12 10 7"/>
+            <line x1="15" y1="12" x2="3" y2="12"/>
+          </svg>
+          ENTRAR
+        </ion-button>
+
+      </form>
+
+      <div class="form-divider">
+        <span></span><small>ou</small><span></span>
+      </div>
+
+      <div class="brand-badge">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="#e53935">
+          <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+        </svg>
+        <span>Rabichos Bebedouro</span>
+      </div>
+      <p class="system-version">Sistema interno · v1.0</p>
+    </div>
+
+  </div>
+</ion-content>

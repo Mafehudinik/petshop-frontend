@@ -1,0 +1,170 @@
+<div class="employees-layout">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <svg width="32" height="28" viewBox="0 0 130 110" fill="none">
+        <ellipse cx="42" cy="72" rx="22" ry="18" fill="none" stroke="rgba(255,255,255,0.9)" stroke-width="3"/>
+        <circle cx="42" cy="48" r="14" fill="none" stroke="rgba(255,255,255,0.9)" stroke-width="3"/>
+        <path d="M30 40 Q24 28 28 22 Q36 30 36 40" fill="none" stroke="rgba(255,255,255,0.9)" stroke-width="3" stroke-linejoin="round"/>
+        <path d="M64 66 Q76 56 74 46" fill="none" stroke="rgba(255,255,255,0.9)" stroke-width="2.5" stroke-linecap="round"/>
+        <ellipse cx="88" cy="74" rx="20" ry="16" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="2.5"/>
+        <circle cx="88" cy="52" r="12" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="2.5"/>
+        <path d="M78 44 L74 30 L84 40" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="2.5" stroke-linejoin="round"/>
+        <path d="M96 42 L100 28 L92 40" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="2.5" stroke-linejoin="round"/>
+        <path d="M65 58 C65 58 58 50 58 45 C58 41 62 38 65 42 C68 38 72 41 72 45 C72 50 65 58 65 58Z" fill="#e53935"/>
+      </svg>
+      <div class="sidebar-brand">
+        <span class="brand-name">RABICHOS</span>
+        <span class="brand-sub">Banho &amp; Tosa</span>
+      </div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <a class="nav-item" routerLink="/dashboard" routerDirection="root" routerLinkActive="active">
+        <ion-icon name="grid-outline"></ion-icon><span>Dashboard</span>
+      </a>
+      <a class="nav-item" routerLink="/clients" routerDirection="root" routerLinkActive="active">
+        <ion-icon name="people-outline"></ion-icon><span>Clientes</span>
+      </a>
+      <a class="nav-item" routerLink="/pets" routerDirection="root" routerLinkActive="active">
+        <ion-icon name="paw-outline"></ion-icon><span>Pets</span>
+      </a>
+      <a class="nav-item" routerLink="/appointments" routerDirection="root" routerLinkActive="active">
+        <ion-icon name="calendar-outline"></ion-icon><span>Agenda</span>
+      </a>
+      <a class="nav-item" routerLink="/hotel" routerDirection="root" routerLinkActive="active">
+        <ion-icon name="home-outline"></ion-icon><span>Hotel</span>
+      </a>
+      <a class="nav-item" routerLink="/sales" routerDirection="root" routerLinkActive="active">
+        <ion-icon name="cash-outline"></ion-icon><span>Vendas (PDV)</span>
+      </a>
+      <a class="nav-item" routerLink="/products" routerDirection="root" routerLinkActive="active">
+        <ion-icon name="cube-outline"></ion-icon><span>Estoque</span>
+      </a>
+      <a class="nav-item" routerLink="/services" routerDirection="root" routerLinkActive="active">
+        <ion-icon name="cut-outline"></ion-icon><span>Serviços</span>
+      </a>
+      <a class="nav-item" routerLink="/reports" routerDirection="root" routerLinkActive="active">
+        <ion-icon name="bar-chart-outline"></ion-icon><span>Relatórios</span>
+      </a>
+      <a class="nav-item" routerLink="/whatsapp" routerDirection="root" routerLinkActive="active">
+        <ion-icon name="logo-whatsapp"></ion-icon><span>WhatsApp</span>
+      </a>
+    </nav>
+
+    <div class="sidebar-user">
+      <div class="user-avatar">{{ userInitials }}</div>
+      <div class="user-info">
+        <span class="user-name">{{ currentUser?.name || 'Admin' }}</span>
+        <span class="user-role">{{ currentUser?.role || 'Administrador' }}</span>
+      </div>
+    </div>
+  </aside>
+
+  <!-- CONTEÚDO -->
+  <div class="main-content">
+
+    <!-- Topbar -->
+    <div class="topbar">
+      <div class="topbar-left">
+        <div class="page-title">Gestão de funcionários</div>
+        <div class="page-subtitle">Gerencie a equipe do pet shop</div>
+      </div>
+      <button class="btn-primary" (click)="addEmployee()">
+        <ion-icon name="add-outline"></ion-icon>
+        Novo funcionário
+      </button>
+    </div>
+
+    <!-- Filtros -->
+    <div class="filter-bar">
+      <div class="search-box">
+        <ion-icon name="search-outline"></ion-icon>
+        <input
+          type="text"
+          placeholder="Buscar por nome ou função..."
+          [(ngModel)]="searchTerm"
+          (input)="filterEmployees()"
+        />
+      </div>
+      <span class="employee-count">{{ filteredEmployees.length }} funcionários</span>
+    </div>
+
+    <!-- Lista de funcionários -->
+    <div class="employees-grid">
+      <div class="employee-card" *ngFor="let employee of filteredEmployees">
+        <div class="employee-header">
+          <div class="employee-avatar">{{ employee.name.substring(0, 2).toUpperCase() }}</div>
+          <div class="employee-info">
+            <div class="employee-name">{{ employee.name }}</div>
+            <div class="employee-role">{{ employee.role || 'Sem função' }}</div>
+          </div>
+        </div>
+
+        <div class="employee-details">
+          <div class="detail-item">
+            <ion-icon name="cash-outline"></ion-icon>
+            <span>Comissão: {{ employee.commission_rate }}%</span>
+          </div>
+          <div class="detail-item" *ngIf="employee.email">
+            <ion-icon name="mail-outline"></ion-icon>
+            <span>{{ employee.email }}</span>
+          </div>
+        </div>
+
+        <div class="employee-actions">
+          <button class="btn-edit" (click)="editEmployee(employee)">
+            <ion-icon name="create-outline"></ion-icon>
+            Editar
+          </button>
+          <button class="btn-delete" (click)="deleteEmployee(employee.id)">
+            <ion-icon name="trash-outline"></ion-icon>
+            Remover
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="empty-state" *ngIf="filteredEmployees.length === 0">
+      <ion-icon name="people-outline"></ion-icon>
+      <p>Nenhum funcionário encontrado</p>
+    </div>
+
+  </div>
+
+</div>
+
+<!-- Modal de cadastro/edição -->
+<div class="modal-overlay" *ngIf="showModal" (click)="closeModal()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h2>{{ isEditing ? 'Editar funcionário' : 'Novo funcionário' }}</h2>
+      <button class="btn-close" (click)="closeModal()">
+        <ion-icon name="close-outline"></ion-icon>
+      </button>
+    </div>
+
+    <div class="modal-body">
+      <div class="form-group">
+        <label>Nome completo</label>
+        <input type="text" [(ngModel)]="currentEmployee.name" placeholder="Digite o nome" />
+      </div>
+      <div class="form-group">
+        <label>Função</label>
+        <input type="text" [(ngModel)]="currentEmployee.role" placeholder="Ex: Tosador, Atendente" />
+      </div>
+      <div class="form-group">
+        <label>Taxa de comissão (%)</label>
+        <input type="number" [(ngModel)]="currentEmployee.commission_rate" placeholder="0" min="0" max="100" />
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn-cancel" (click)="closeModal()">Cancelar</button>
+      <button class="btn-save" (click)="saveEmployee()">
+        {{ isEditing ? 'Atualizar' : 'Cadastrar' }}
+      </button>
+    </div>
+  </div>
+</div>

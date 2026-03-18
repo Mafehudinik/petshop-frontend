@@ -1,0 +1,7 @@
+{
+  "name": "petshop-frontend",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}

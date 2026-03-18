@@ -1,0 +1,579 @@
+// =============================================
+// Dashboard - Rabichos Banho & Tosa
+// =============================================
+
+// ── Variáveis locais (sem depender de global.scss) ──
+$text-primary:   #1a1a1a;
+$text-secondary: #888888;
+$border-color:   #e8ede8;
+$bg-page:        #f5f7f5;
+$green-main:     #1b5e35;
+$green-mid:      #2e7d4f;
+$green-dark:     #1a4a28;
+
+// ── Layout geral ─────────────────────────────
+.dashboard-layout {
+  display: flex;
+  height: 100vh;
+  width: 100%;
+  overflow: hidden;
+  background: $bg-page;
+}
+
+// ══════════════════════════════════════════════
+// SIDEBAR
+// ══════════════════════════════════════════════
+.sidebar {
+  width: 210px;
+  flex-shrink: 0;
+  background: linear-gradient(160deg, $green-main 0%, $green-mid 60%, $green-dark 100%);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.sidebar-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 20px 16px 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  flex-shrink: 0;
+}
+
+.sidebar-brand {
+  display: flex;
+  flex-direction: column;
+
+  .brand-name {
+    color: #fff;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    line-height: 1.1;
+  }
+
+  .brand-sub {
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 10px;
+    font-style: italic;
+    letter-spacing: 0.08em;
+  }
+}
+
+.sidebar-nav {
+  flex: 1;
+  padding: 12px 0;
+  overflow-y: auto;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 16px;
+  border-left: 3px solid transparent;
+  cursor: pointer;
+  transition: background 0.15s;
+  text-decoration: none;
+
+  ion-icon {
+    font-size: 16px;
+    color: rgba(255, 255, 255, 0.6);
+    flex-shrink: 0;
+  }
+
+  span {
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.6);
+  }
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.08);
+  }
+
+  &.active {
+    background: rgba(255, 255, 255, 0.15);
+    border-left-color: #fff;
+
+    ion-icon, span { color: #fff; }
+  }
+}
+
+.sidebar-user {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  flex-shrink: 0;
+}
+
+.user-avatar {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: $green-mid;
+  border: 1.5px solid rgba(255, 255, 255, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 600;
+  color: #fff;
+  flex-shrink: 0;
+}
+
+.user-info {
+  display: flex;
+  flex-direction: column;
+
+  .user-name {
+    color: #fff;
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 1.2;
+  }
+
+  .user-role {
+    color: rgba(255, 255, 255, 0.4);
+    font-size: 10px;
+  }
+}
+
+// ══════════════════════════════════════════════
+// CONTEÚDO PRINCIPAL
+// ══════════════════════════════════════════════
+.main-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  // garante que o fundo seja visível
+  background: $bg-page;
+}
+
+// ── Topbar ────────────────────────────────────
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+}
+
+.topbar-left {
+  .page-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: $text-primary;
+    margin: 0 0 2px;
+  }
+
+  .page-date {
+    font-size: 12px;
+    color: $text-secondary;
+    margin: 0;
+  }
+}
+
+.topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.topbar-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: #fff;
+  border: 1px solid $border-color;
+  border-radius: 8px;
+  padding: 7px 12px;
+  font-size: 12px;
+  color: $text-secondary;
+  cursor: pointer;
+  position: relative;
+  transition: border-color 0.15s;
+
+  ion-icon { font-size: 14px; }
+
+  &.icon-only {
+    padding: 7px 10px;
+    span:not(.notif-badge) { display: none; }
+  }
+
+  &:hover { border-color: $green-main; }
+}
+
+.notif-badge {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  width: 16px;
+  height: 16px;
+  background: #e53935;
+  border-radius: 50%;
+  font-size: 9px;
+  color: #fff;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+// ── KPI Grid ──────────────────────────────────
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+.kpi-card {
+  background: #fff;
+  border-radius: 12px;
+  border: 1px solid $border-color;
+  padding: 16px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+}
+
+.kpi-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.kpi-label {
+  font-size: 11px;
+  color: $text-secondary;
+  font-weight: 400;
+}
+
+.kpi-icon {
+  width: 30px;
+  height: 30px;
+  border-radius: 7px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+
+  ion-icon { font-size: 15px; }
+
+  &.green { background: #EAF3DE; ion-icon { color: #3B6D11; } }
+  &.blue  { background: #E6F1FB; ion-icon { color: #185FA5; } }
+  &.amber { background: #FAEEDA; ion-icon { color: #854F0B; } }
+  &.red   { background: #FCEBEB; ion-icon { color: #A32D2D; } }
+}
+
+.kpi-value {
+  font-size: 24px;
+  font-weight: 600;
+  color: $text-primary;
+  margin-bottom: 4px;
+  line-height: 1;
+
+  &.red-value { color: #A32D2D; }
+}
+
+.kpi-trend {
+  font-size: 11px;
+  color: $text-secondary;
+
+  &.green   { color: #3B6D11; }
+  &.red     { color: #A32D2D; }
+  &.neutral { color: $text-secondary; }
+}
+
+// ── Gráfico + Serviços ────────────────────────
+.mid-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
+  gap: 12px;
+}
+
+// ── Agenda + Hotel ────────────────────────────
+.bottom-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+  gap: 12px;
+}
+
+// ── Card genérico ─────────────────────────────
+.card {
+  background: #fff;
+  border-radius: 12px;
+  border: 1px solid $border-color;
+  padding: 16px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+
+.card-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: $text-primary;
+}
+
+.see-all {
+  font-size: 11px;
+  color: $green-main;
+  cursor: pointer;
+  text-decoration: none;
+
+  &:hover { text-decoration: underline; }
+}
+
+// ── Gráfico de barras ─────────────────────────
+.bar-chart {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+  height: 100px;
+  padding-bottom: 4px;
+}
+
+.bar-group {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  height: 100%;
+  justify-content: flex-end;
+}
+
+.bar {
+  width: 100%;
+  background: #d0e8d8;
+  border-radius: 4px 4px 0 0;
+  min-height: 4px;
+  transition: background 0.2s;
+
+  &.active { background: $green-main; }
+}
+
+.bar-label {
+  font-size: 10px;
+  color: $text-secondary;
+  white-space: nowrap;
+
+  &.active {
+    color: $green-main;
+    font-weight: 600;
+  }
+}
+
+// ── Serviços do dia ───────────────────────────
+.services-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.service-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.service-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.service-name {
+  flex: 1;
+  font-size: 12px;
+  color: $text-primary;
+}
+
+.service-count {
+  font-size: 12px;
+  font-weight: 600;
+  color: $text-primary;
+}
+
+// ── Lista de agendamentos ─────────────────────
+.appt-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.appt-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  border-left: 3px solid #ddd;
+  background: #f9f9f9;
+
+  &.concluido  { background: #EAF3DE; border-left-color: $green-main; }
+  &.confirmado { background: #E6F1FB; border-left-color: #185FA5; }
+  &.agendado   { background: #f5f7f5; border-left-color: #ccc; }
+  &.em_andamento { background: #FAEEDA; border-left-color: #854F0B; }
+}
+
+.appt-time {
+  font-size: 11px;
+  font-weight: 600;
+  min-width: 38px;
+  flex-shrink: 0;
+  color: $text-secondary;
+
+  .concluido &    { color: #3B6D11; }
+  .confirmado &   { color: #185FA5; }
+  .em_andamento & { color: #854F0B; }
+}
+
+.appt-body {
+  flex: 1;
+  min-width: 0;
+
+  .appt-pet {
+    font-size: 12px;
+    font-weight: 500;
+    color: $text-primary;
+    margin-bottom: 2px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .appt-client {
+    font-size: 11px;
+    color: $text-secondary;
+  }
+}
+
+.appt-badge {
+  font-size: 10px;
+  font-weight: 500;
+  padding: 2px 8px;
+  border-radius: 10px;
+  flex-shrink: 0;
+
+  &.concluido    { background: $green-main; color: #fff; }
+  &.confirmado   { background: #185FA5;     color: #fff; }
+  &.em_andamento { background: #854F0B;     color: #fff; }
+  &.agendado     { background: #e0e0e0;     color: #666; }
+}
+
+// ── Hotel ─────────────────────────────────────
+.hotel-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.hotel-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 1px solid $border-color;
+  background: #fafafa;
+}
+
+.hotel-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+
+  ion-icon { font-size: 16px; }
+
+  &.ok     { background: #EAF3DE; ion-icon { color: #3B6D11; } }
+  &.soon   { background: #FAEEDA; ion-icon { color: #854F0B; } }
+  &.urgent { background: #FCEBEB; ion-icon { color: #A32D2D; } }
+}
+
+.hotel-body {
+  flex: 1;
+
+  .hotel-pet {
+    font-size: 12px;
+    font-weight: 500;
+    color: $text-primary;
+  }
+
+  .hotel-checkout {
+    font-size: 10px;
+    color: $text-secondary;
+    margin-top: 2px;
+  }
+}
+
+.hotel-badge {
+  font-size: 10px;
+  font-weight: 500;
+  padding: 2px 8px;
+  border-radius: 6px;
+  flex-shrink: 0;
+
+  &.ok     { background: #EAF3DE; color: #3B6D11; }
+  &.soon   { background: #FAEEDA; color: #854F0B; }
+  &.urgent { background: #FCEBEB; color: #A32D2D; }
+}
+
+// ── Empty state ───────────────────────────────
+.empty-state {
+  text-align: center;
+  padding: 28px 16px;
+  color: $text-secondary;
+
+  ion-icon {
+    font-size: 40px;
+    color: #d0e8d8;
+    display: block;
+    margin: 0 auto 10px;
+  }
+
+  p {
+    font-size: 13px;
+    margin: 0;
+    color: $text-secondary;
+  }
+}
+
+.empty-text {
+  font-size: 12px;
+  color: $text-secondary;
+}
+
+// ── Responsivo ────────────────────────────────
+@media (max-width: 1200px) {
+  .kpi-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 900px) {
+  .mid-grid, .bottom-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .sidebar { display: none; }
+  .kpi-grid { grid-template-columns: 1fr 1fr; }
+  .main-content { padding: 12px; }
+}

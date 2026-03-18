@@ -1,0 +1,298 @@
+<div class="services-layout">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <svg width="32" height="28" viewBox="0 0 130 110" fill="none">
+        <ellipse cx="42" cy="72" rx="22" ry="18" fill="none" stroke="rgba(255,255,255,0.9)" stroke-width="3"/>
+        <circle cx="42" cy="48" r="14" fill="none" stroke="rgba(255,255,255,0.9)" stroke-width="3"/>
+        <path d="M30 40 Q24 28 28 22 Q36 30 36 40" fill="none" stroke="rgba(255,255,255,0.9)" stroke-width="3" stroke-linejoin="round"/>
+        <path d="M64 66 Q76 56 74 46" fill="none" stroke="rgba(255,255,255,0.9)" stroke-width="2.5" stroke-linecap="round"/>
+        <ellipse cx="88" cy="74" rx="20" ry="16" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="2.5"/>
+        <circle cx="88" cy="52" r="12" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="2.5"/>
+        <path d="M78 44 L74 30 L84 40" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="2.5" stroke-linejoin="round"/>
+        <path d="M96 42 L100 28 L92 40" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="2.5" stroke-linejoin="round"/>
+        <path d="M65 58 C65 58 58 50 58 45 C58 41 62 38 65 42 C68 38 72 41 72 45 C72 50 65 58 65 58Z" fill="#e53935"/>
+      </svg>
+      <div class="sidebar-brand">
+        <span class="brand-name">RABICHOS</span>
+        <span class="brand-sub">Banho &amp; Tosa</span>
+      </div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <a class="nav-item" routerLink="/dashboard" routerDirection="root" routerLinkActive="active">
+        <ion-icon name="grid-outline"></ion-icon><span>Dashboard</span>
+      </a>
+      <a class="nav-item" routerLink="/clients" routerDirection="root" routerLinkActive="active">
+        <ion-icon name="people-outline"></ion-icon><span>Clientes</span>
+      </a>
+      <a class="nav-item" routerLink="/pets" routerDirection="root" routerLinkActive="active">
+        <ion-icon name="paw-outline"></ion-icon><span>Pets</span>
+      </a>
+      <a class="nav-item" routerLink="/appointments" routerDirection="root" routerLinkActive="active">
+        <ion-icon name="calendar-outline"></ion-icon><span>Agenda</span>
+      </a>
+      <a class="nav-item" routerLink="/hotel" routerDirection="root" routerLinkActive="active">
+        <ion-icon name="home-outline"></ion-icon><span>Hotel</span>
+      </a>
+      <a class="nav-item" routerLink="/sales" routerDirection="root" routerLinkActive="active">
+        <ion-icon name="cash-outline"></ion-icon><span>Vendas (PDV)</span>
+      </a>
+      <a class="nav-item" routerLink="/products" routerDirection="root" routerLinkActive="active">
+        <ion-icon name="cube-outline"></ion-icon><span>Estoque</span>
+      </a>
+      <a class="nav-item" routerLink="/services" routerDirection="root" routerLinkActive="active">
+        <ion-icon name="cut-outline"></ion-icon><span>Serviços</span>
+      </a>
+      <a class="nav-item" routerLink="/reports" routerDirection="root" routerLinkActive="active">
+        <ion-icon name="bar-chart-outline"></ion-icon><span>Relatórios</span>
+      </a>
+      <a class="nav-item" routerLink="/whatsapp" routerDirection="root" routerLinkActive="active">
+        <ion-icon name="logo-whatsapp"></ion-icon><span>WhatsApp</span>
+      </a>
+    </nav>
+
+    <div class="sidebar-user">
+      <div class="user-avatar">{{ userInitials }}</div>
+      <div class="user-info">
+        <span class="user-name">{{ currentUser?.name || 'Admin' }}</span>
+        <span class="user-role">{{ currentUser?.role || 'Administrador' }}</span>
+      </div>
+    </div>
+  </aside>
+
+  <!-- CONTEÚDO -->
+  <div class="main-content">
+
+    <!-- Topbar -->
+    <div class="topbar">
+      <div class="topbar-left">
+        <div class="page-title">Catálogo de serviços</div>
+        <div class="page-subtitle">Gerencie os serviços oferecidos pelo pet shop</div>
+      </div>
+      <button class="btn-primary" (click)="openModal()">
+        <ion-icon name="add-outline"></ion-icon>
+        Novo serviço
+      </button>
+    </div>
+
+    <!-- Filtros -->
+    <div class="filter-bar">
+      <div class="search-box">
+        <ion-icon name="search-outline"></ion-icon>
+        <input type="text" placeholder="Buscar serviço..."
+               [(ngModel)]="searchTerm" (input)="filterServices()" />
+      </div>
+      <span class="service-count">{{ filteredServices.length }} serviços</span>
+    </div>
+
+    <!-- Grid de serviços -->
+    <div class="services-area">
+      <div class="loading-state" *ngIf="loading">
+        <ion-spinner name="crescent"></ion-spinner>
+        <p>Carregando serviços...</p>
+      </div>
+
+      <div class="services-grid" *ngIf="!loading && filteredServices.length > 0">
+        <div class="service-card" *ngFor="let service of filteredServices"
+             [class.inactive]="!service.active">
+
+          <div class="service-card-top">
+            <div class="service-icon">
+              <ion-icon name="cut-outline"></ion-icon>
+            </div>
+            <div class="service-active-badge" *ngIf="service.active">Ativo</div>
+            <div class="service-inactive-badge" *ngIf="!service.active">Inativo</div>
+          </div>
+
+          <div class="service-info">
+            <div class="service-name">{{ service.name }}</div>
+            <div class="service-description">{{ service.description || 'Sem descrição' }}</div>
+          </div>
+
+          <div class="service-details">
+            <div class="detail-row">
+              <span class="label">Preço</span>
+              <span class="value price">{{ service.price | currency:'BRL':'symbol':'1.2-2' }}</span>
+            </div>
+            <div class="detail-row">
+              <span class="label">Duração</span>
+              <span class="value">{{ formatDuration(service.duration) }}</span>
+            </div>
+          </div>
+
+          <div class="service-actions">
+            <button class="btn-edit" (click)="openModal(service)">
+              <ion-icon name="create-outline"></ion-icon>
+              Editar
+            </button>
+            <button class="btn-delete" (click)="confirmDelete(service)">
+              <ion-icon name="trash-outline"></ion-icon>
+              Remover
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="empty-state" *ngIf="!loading && filteredServices.length === 0">
+        <ion-icon name="cut-outline"></ion-icon>
+        <h3>Nenhum serviço encontrado</h3>
+        <p>{{ searchTerm ? 'Tente outro termo.' : 'Cadastre o primeiro serviço.' }}</p>
+        <button class="btn-primary" (click)="openModal()" *ngIf="!searchTerm">
+          <ion-icon name="add-outline"></ion-icon>
+          Cadastrar serviço
+        </button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     MODAL — NOVO / EDITAR SERVIÇO
+════════════════════════════════════════ -->
+<div class="modal-overlay" *ngIf="showModal" (click)="closeModal()">
+  <div class="modal-box" (click)="$event.stopPropagation()">
+
+    <div class="modal-header">
+      <div class="modal-header-left">
+        <div class="modal-icon">
+          <ion-icon name="cut-outline"></ion-icon>
+        </div>
+        <div>
+          <div class="modal-title">{{ isEditing ? 'Editar serviço' : 'Novo serviço' }}</div>
+          <div class="modal-subtitle">Preencha os dados do serviço</div>
+        </div>
+      </div>
+      <button class="modal-close" (click)="closeModal()">
+        <ion-icon name="close-outline"></ion-icon>
+      </button>
+    </div>
+
+    <div class="modal-body">
+
+      <!-- Identificação -->
+      <div class="form-section-title">Identificação</div>
+
+      <div class="form-group full">
+        <label>Nome do serviço <span class="required">*</span></label>
+        <div class="input-wrap" [class.error]="formErrors.name">
+          <ion-icon name="cut-outline"></ion-icon>
+          <input type="text" placeholder="Ex: Banho completo"
+                 [(ngModel)]="form.name" (blur)="validateField('name')" />
+        </div>
+        <span class="field-error" *ngIf="formErrors.name">{{ formErrors.name }}</span>
+      </div>
+
+      <div class="form-group full">
+        <label>Descrição <span class="optional">(opcional)</span></label>
+        <textarea placeholder="Descreva o que está incluso no serviço..."
+                  [(ngModel)]="form.description" rows="3"></textarea>
+      </div>
+
+      <!-- Preço e duração -->
+      <div class="form-section-title">Preço e duração</div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Preço (R$) <span class="required">*</span></label>
+          <div class="input-wrap" [class.error]="formErrors.price">
+            <span class="currency-prefix">R$</span>
+            <input type="number" step="0.01" min="0" placeholder="0,00"
+                   [(ngModel)]="form.price" (blur)="validateField('price')" />
+          </div>
+          <span class="field-error" *ngIf="formErrors.price">{{ formErrors.price }}</span>
+        </div>
+
+        <div class="form-group">
+          <label>Duração rápida</label>
+          <div class="duration-presets">
+            <button *ngFor="let d of durationPresets"
+                    [class.active]="form.duration === d.value"
+                    (click)="setDuration(d.value)">
+              {{ d.label }}
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Duração personalizada -->
+      <div class="form-group full">
+        <label>Duração personalizada (minutos) <span class="required">*</span></label>
+        <div class="input-wrap" [class.error]="formErrors.duration">
+          <ion-icon name="time-outline"></ion-icon>
+          <input type="number" min="1" placeholder="Ex: 45"
+                 [(ngModel)]="form.duration" (blur)="validateField('duration')" />
+          <span class="duration-preview" *ngIf="form.duration">
+            {{ formatDuration(form.duration) }}
+          </span>
+        </div>
+        <span class="field-error" *ngIf="formErrors.duration">{{ formErrors.duration }}</span>
+      </div>
+
+      <!-- Toggle ativo -->
+      <div class="active-toggle">
+        <div class="toggle-info">
+          <div class="toggle-label">Serviço ativo</div>
+          <div class="toggle-sub">Disponível para agendamento</div>
+        </div>
+        <button class="toggle-switch" [class.on]="form.active" (click)="form.active = !form.active">
+          <span class="toggle-knob"></span>
+        </button>
+      </div>
+
+    </div>
+
+    <div class="modal-footer">
+      <span class="required-note">* campos obrigatórios</span>
+      <div class="modal-actions">
+        <button class="btn-cancel" (click)="closeModal()">Cancelar</button>
+        <button class="btn-save" (click)="saveService()" [disabled]="saving">
+          <ion-icon name="checkmark-outline"></ion-icon>
+          {{ saving ? 'Salvando...' : (isEditing ? 'Atualizar' : 'Salvar serviço') }}
+        </button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     MODAL — CONFIRMAR EXCLUSÃO
+════════════════════════════════════════ -->
+<div class="modal-overlay" *ngIf="showDeleteModal" (click)="closeDeleteModal()">
+  <div class="modal-box modal-box-sm" (click)="$event.stopPropagation()">
+
+    <div class="modal-header delete-header">
+      <div class="modal-header-left">
+        <div class="modal-icon delete-icon">
+          <ion-icon name="trash-outline"></ion-icon>
+        </div>
+        <div>
+          <div class="modal-title">Remover serviço</div>
+          <div class="modal-subtitle">Esta ação não pode ser desfeita</div>
+        </div>
+      </div>
+      <button class="modal-close" (click)="closeDeleteModal()">
+        <ion-icon name="close-outline"></ion-icon>
+      </button>
+    </div>
+
+    <div class="modal-body" *ngIf="deletingService">
+      <div class="delete-confirm-box">
+        <ion-icon name="warning-outline"></ion-icon>
+        <p>Deseja remover o serviço <strong>{{ deletingService.name }}</strong>?</p>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn-cancel" (click)="closeDeleteModal()">Cancelar</button>
+      <button class="btn-delete-confirm" (click)="doDelete()" [disabled]="saving">
+        <ion-icon name="trash-outline"></ion-icon>
+        {{ saving ? 'Removendo...' : 'Sim, remover' }}
+      </button>
+    </div>
+
+  </div>
+</div>
